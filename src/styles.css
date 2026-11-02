@@ -70,3 +70,14 @@ button.sl{cursor:pointer;transition:.15s}button.sl:hover{transform:translateY(-3
 #bdn.min{width:auto;padding:4px 14px 12px}#bdn.min h2,#bdn.min p,#bdn.min #bds,#bdn.min #bcl,#bdn.min .orn{display:none}
 @media(max-width:800px){#btr{left:8px;right:8px;width:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:8px;max-width:none;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}.bc{font-size:10.5px;border-radius:11px;width:auto}.bc img{max-width:52px}.fly.gh{width:80px;height:80px}#bfb{font-size:13.5px;padding:8px 12px 9px}#bdn{bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}}
 @media(max-width:800px) and (orientation:landscape){#btr{grid-template-columns:repeat(9,1fr)}.bc img{max-width:40px}}
+/* login page + log out pill */
+#login{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:72px 16px 24px}
+.lc{width:min(420px,100%);background:var(--card);border:3px solid var(--edge);border-radius:26px;padding:0 24px 22px;box-shadow:0 8px 0 var(--edge),0 22px 50px rgba(0,0,0,.28);display:flex;flex-direction:column}
+.lc .orn{margin:12px 0 14px}.lc .no{align-self:flex-start}.lc h2{font-size:clamp(30px,6vw,42px);margin:8px 0 4px;font-weight:900;line-height:1.05}.lc p{margin:0 0 14px;font-weight:600;line-height:1.5}
+.lc label{display:flex;flex-direction:column;gap:5px;font-weight:900;font-size:14px;margin-bottom:12px}
+.lc input{border:2.5px solid var(--edge);background:var(--slot);color:var(--ink);border-radius:14px;padding:11px 14px;font:700 16px Nunito,system-ui,sans-serif;outline:none}
+.lc input:focus-visible{box-shadow:0 0 0 3px var(--gold)}
+.lc .btn{margin:4px 0 0}.lc .btn:disabled{opacity:.6;cursor:default}
+.lk{margin-top:12px;background:none;border:0;color:var(--ink);font:800 14.5px Nunito,system-ui,sans-serif;text-decoration:underline;cursor:pointer;padding:6px}
+.lm{overflow-wrap:anywhere;border:2.5px solid;border-radius:14px;padding:9px 12px;font-weight:800;font-size:14.5px;line-height:1.4;margin-bottom:12px}.lm.ok{background:#dff5e0;color:#143d19;border-color:#2f8a39}.lm.bad{background:#fbe1e1;color:#5c1515;border-color:#c24b4b}
+#so{position:fixed;z-index:40;top:calc(env(safe-area-inset-top,0px) + 62px);left:12px;height:32px;padding:0 14px;border:2.5px solid var(--edge);border-radius:18px;background:var(--card);color:var(--ink);font:900 13px Nunito,system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--edge)}

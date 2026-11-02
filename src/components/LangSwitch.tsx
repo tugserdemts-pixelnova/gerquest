@@ -1,4 +1,4 @@
-import { setState } from "../game/store";
+import { setState, store } from "../game/store";
 import { useT } from "../game/hooks";
 import type { Lang } from "../data/i18n";
 
@@ -9,7 +9,7 @@ export default function LangSwitch() {
   return (
     <div id="lg" role="group" aria-label="Хэл / Language">
       {LANGS.map(l => (
-        <button key={l} type="button" aria-pressed={l == lang} onClick={() => l != lang && setState({ lang: l })}>
+        <button key={l} type="button" aria-pressed={l == lang} onClick={() => { if (l != lang) { setState({ lang: l }); store.set("gerLang", l); } }}>
           {l.toUpperCase()}
         </button>
       ))}

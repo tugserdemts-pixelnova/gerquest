@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { getState, store, useGame } from "./game/store";
+import { getState, useGame } from "./game/store";
 import { SC, maxJ } from "./game/layout";
 import { killDrag } from "./game/build";
 import { t } from "./data/i18n";
@@ -13,16 +13,16 @@ import Labels from "./components/Labels";
 import Inventory from "./components/Inventory";
 import InfoPanel from "./components/panel/InfoPanel";
 import BuildMode from "./components/build/BuildMode";
+import SignOut from "./components/auth/SignOut";
 
 export default function App() {
   const { lang, u, panel, bm } = useGame();
   const lock = !!panel || bm.on;
 
-  // language: page title + <html lang>, remembered for next visit
+  // language: page title + <html lang>
   useEffect(() => {
     document.documentElement.lang = lang;
     document.title = t(lang, "title");
-    store.set("gerLang", lang);
     killDrag();
   }, [lang]);
 
@@ -46,6 +46,7 @@ export default function App() {
       <Spacer />
       <Scene />
       <LangSwitch />
+      <SignOut />
       <Hero />
       <Hint />
       <Labels />
