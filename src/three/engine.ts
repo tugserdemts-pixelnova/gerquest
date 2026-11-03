@@ -1,5 +1,5 @@
 import { T, PI, lerp, sm } from "./util";
-import { createWorld, GX, GZ, HK, BX, BZ, BAZ, BEL, hf } from "./world";
+import { createWorld, GX, GZ, HK, BX, BZ, BAZ, BEL, HAZE, SUN, hf } from "./world";
 import { LP, labelLayer } from "./labels";
 import type { GerGroup } from "./ger";
 import { N, ORDER } from "../data/parts";
@@ -9,7 +9,7 @@ import { openPanel } from "../game/actions";
 import { dragRef } from "../game/build";
 
 type World = ReturnType<typeof createWorld>;
-let R: T.WebGLRenderer, S: T.Scene, cam: T.PerspectiveCamera, w: World, cv: HTMLCanvasElement;
+let R: T.WebGLRenderer, S: T.Scene, cam: T.PerspectiveCamera, w: World, cv: HTMLCanvasElement, sun: T.DirectionalLight;
 let started = false;
 
 // screen-space ellipse around the build ger, used to test drops
@@ -121,7 +121,12 @@ function loop(now: number) {
     const far = hP.distanceTo(bP); hP.lerp(bP, e); hP.y += Math.sin(PI * e) * Math.min(45, far * .16); hL.lerp(bL, e);
     fov = lerp(fov, 42, e); ox *= 1 - e; oy = lerp(oy, boY, e);
   }
+  // build mode looks down at the site, so the far peaks would crowd the top of the view: fade them into the haze
+  const mf = .6 * bt * bt * (3 - 2 * bt); w.mtnM.color.setScalar(1 - mf); w.mtnM.emissive.set(HAZE).multiplyScalar(mf);
   cam.position.copy(hP); cam.lookAt(hL); cam.fov = fov; cam.setViewOffset(W, Hh, ox, oy, W, Hh);
+  // the shadow box rides along with whatever the camera looks at; the sky stays centred on the camera
+  sun.target.position.copy(hL); sun.position.copy(hL).addScaledVector(SUN, 9); sun.target.updateMatrixWorld();
+  w.sky.position.copy(cam.position);
   for (let j = 1; j <= N; j++) {
     const s = ST[j]; s.q.position.y = 3 + Math.sin(now / 400 + j) * .2;
     if (!s.hold.visible) continue;
@@ -211,11 +216,16 @@ export function refreshStations(u: number) {
 export function initEngine(canvas: HTMLCanvasElement) {
   if (started) return;
   started = true; cv = canvas;
-  R = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
+  R = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: "high-performance" }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
+  R.shadowMap.enabled = true; R.shadowMap.type = T.PCFSoftShadowMap;
   S = new T.Scene(); cam = new T.PerspectiveCamera(38, 1, .1, 50); cam.position.set(0, 0, 9);
-  S.add(new T.HemisphereLight(0xffffff, 0x998877, 1.05));
-  const sun = new T.DirectionalLight(0xffffff, .8); sun.position.set(4, 6, 6); S.add(sun);
-  S.fog = new T.Fog(0xd9ecf2, 35, 210); cam.fov = 50; cam.far = 900; cam.near = .5;
+  S.add(new T.HemisphereLight(0xf2f8ff, 0x8a7a55, .95));
+  // warm sun with soft shadows over a 90×90 box around the view target
+  sun = new T.DirectionalLight(0xfff3dd, .85); sun.position.copy(SUN); sun.castShadow = true;
+  const sc = sun.shadow.camera, big = Math.min(innerWidth, innerHeight) > 500;
+  sun.shadow.mapSize.set(big ? 2048 : 1536, big ? 2048 : 1536); sc.left = sc.bottom = -45; sc.right = sc.top = 45; sc.near = 1; sc.far = 220;
+  sun.shadow.bias = -.0006; sun.shadow.normalBias = .03; sun.shadow.radius = 3; S.add(sun, sun.target);
+  S.fog = new T.Fog(HAZE, 40, 240); cam.fov = 50; cam.far = 900; cam.near = .5;
   w = createWorld(S);
   bindPointer();
   const st = getState();

@@ -10,7 +10,7 @@ export const sm = (a: number, b: number, x: number) => {
 };
 
 export const M = (c: Col, d?: unknown) =>
-  new T.MeshLambertMaterial({ color: c, flatShading: true, side: d ? T.DoubleSide : T.FrontSide } as T.MeshLambertMaterialParameters);
+  new T.MeshLambertMaterial({ color: c, side: d ? T.DoubleSide : T.FrontSide });
 export const bx = (w: number, h: number, d: number, c: Col, x: number, y: number, z: number, g: T.Object3D) => {
   const m = new T.Mesh(new T.BoxGeometry(w, h, d), M(c));
   m.position.set(x, y, z);

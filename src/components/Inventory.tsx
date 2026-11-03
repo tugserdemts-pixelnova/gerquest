@@ -19,9 +19,9 @@ export default function Inventory() {
           <span>{t("inv")}</span>
           <b>{u}/{N}</b>
           {u == N && (
-            <button id="hb" title={t("buildT") + (built ? " " + "★".repeat(built) : "")} onClick={enterBuild}>🔨</button>
+            <button id="hb" aria-label={t("buildT")} title={t("buildT") + (built ? " " + "★".repeat(built) : "")} onClick={enterBuild}>🔨</button>
           )}
-          <button id="rs" title={t("reset")} onClick={resetProgress}>↺</button>
+          <button id="rs" aria-label={t("reset")} title={t("reset")} onClick={resetProgress}>↺</button>
         </div>
         <Ornament />
         <div className="ig">
@@ -39,7 +39,7 @@ export default function Inventory() {
           )}
         </div>
       </aside>
-      <button id="invt" hidden={u <= 0 || invAway} className={invOpen ? "open" : ""} title={t("invT")} onClick={toggleInv}>
+      <button id="invt" hidden={u <= 0 || invAway} className={invOpen ? "open" : ""} title={t("invT")} aria-label={t("invT")} aria-expanded={invOpen} aria-controls="inv" onClick={toggleInv}>
         {w > 800 ? (invOpen ? "›" : "‹") : (invOpen ? "▴" : "▾")}
       </button>
     </>
