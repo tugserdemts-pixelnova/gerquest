@@ -120,7 +120,8 @@ button.sl{cursor:pointer;transition:.15s}button.sl:hover{transform:translateY(-3
 #ssn button:hover:not([aria-pressed="true"]){background:var(--card)}
 #ssn button[aria-pressed="true"]{background:var(--sea);color:#16295a}
 /* sign-in page */
-#auth{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:72px 16px 24px}
+#auth{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:72px 16px 24px;background:#a9d2ec url(/login-bg.webp) 50% 100%/cover no-repeat}
+@media(max-width:600px){#auth{place-items:end center;padding-bottom:12px;background-color:#8fc350;background-size:auto 50%;background-position:50% 0}}
 .ac{width:min(400px,100%);background:var(--card);color:var(--ink);border:3px solid var(--edge);border-radius:24px;padding:22px;box-shadow:0 6px 0 var(--edge);display:flex;flex-direction:column}
 .ac h1{margin:0 0 16px;line-height:0;text-align:center}
 .atabs{display:grid;grid-template-columns:1fr 1fr;margin-bottom:16px;border:2.5px solid var(--edge);border-radius:16px;overflow:hidden;background:var(--slot)}
