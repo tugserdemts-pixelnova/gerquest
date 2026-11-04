@@ -4,6 +4,8 @@ import { plankFloor } from "./parts/floor";
 import { wallLat } from "./parts/wall";
 import { buildBagana } from "./parts/bagana";
 import { buildToono } from "./parts/toono";
+import { uniRing } from "./parts/uni";
+import { doorUnit } from "./parts/door";
 
 // surface grid: f(u 0..1, row) -> [x,y,z,u,v,shade]; closed=true welds the normals across the seam
 type GridPt = [number, number, number, number, number, number?];
@@ -44,8 +46,8 @@ const wallGeo = (k: number, off: number, flap?: number, head?: number) => grid(h
   if (flap) { const d = a - PI / 2 - ph; if (d < .42) r += .012; else c -= .22 * Math.max(0, 1 - (d - .42) / .09); }
   return [Math.cos(a) * r, y, Math.sin(a) * r, a / (2 * PI) * 4, y / 1.15, c];
 });
-// roof cloth: slightly convex, faint ridges over the 20 унь with sag between, hem hanging over the wall as a short wavy skirt
-const RN = [.376, .926], ridge = (a: number) => Math.pow(.5 + .5 * Math.cos(20 * a), 4) * .02;
+// roof cloth: slightly convex, faint ridges over the унь with sag between, hem hanging over the wall as a short wavy skirt
+const RN = [.376, .926], UNI = 48, ridge = (a: number) => Math.pow(.5 + .5 * Math.cos(UNI * a), 4) * .012;
 const roofPt = (a: number, t: number, off: number) => {
   const d = .055 * Math.sin(PI * t) + (1 - .8 * t) * (ridge(a) - .007) + .004 * Math.sin(7 * a + t * 15) * Math.sin(11 * t + a * 3) + off;
   return [2.15 - 1.6 * t + RN[0] * d, 1.15 + .65 * t + RN[1] * d];
@@ -101,6 +103,7 @@ export type GerGroup = typeof GER_GROUPS[number];
 export interface GerData {
   ex: [T.Object3D, number, number, number][]; // exploded view offsets
   fade: T.Object3D[]; // cloth layers that fade in
+  door: T.Object3D; // hinge of the door leaf: rotation.y swings it open, outward
   G: Record<GerGroup, T.Group>;
 }
 
@@ -134,17 +137,13 @@ export const buildGer = () => {
   // floor planks
   G.F.add(plankFloor(2.1, false));
   // lattice wall, open at the doorway
-  wallLat(G.Lat, 1.9, 1.1, 28, false, [5.91, 8.09]);
+  wallLat(G.Lat, 1.9, 1.1, 60, [1.326, 1.816]);
   // inner belt (дотуур бүслүүр): two ropes at the lattice radius
-  [.38, .78].forEach(y => rope(G.IB, 1.955, y, .014, 0x8a5632));
+  [.38, .78].forEach(y => rope(G.IB, 1.93, y, .014, 0x8a5632));
   // columns: stand on the floor and carry the toono
-  [-.55, .55].forEach(x => { const c = buildBagana(); c.scale.set(.36, .4375, .36); c.position.set(x, .875, 0); G.Cl.add(c); });
+  [-.55, .55].forEach(x => { const c = buildBagana(); c.scale.set(.36, .4375, .36); c.position.set(x, .875, 0); c.rotation.y = PI / 4; G.Cl.add(c); });
   // uni poles: thin end in the toono ring, other end on the wall heads
-  for (let i = 0; i < 20; i++) {
-    const a = i / 20 * PI * 2, A = new T.Vector3(Math.cos(a) * .53, 1.755, Math.sin(a) * .53), Bp = new T.Vector3(Math.cos(a) * 1.94, 1.1, Math.sin(a) * 1.94), L = A.distanceTo(Bp);
-    const m = ms(new T.CylinderGeometry(.035, .035, L, 5).rotateX(PI / 2), 0xe8661a, G.Un, (A.x + Bp.x) / 2, (A.y + Bp.y) / 2, (A.z + Bp.z) / 2);
-    m.lookAt(Bp);
-  }
+  uniRing(UNI, G.Un, .53, 1.755, 1.94, 1.1);
   // toono wheel
   const tn = buildToono(); tn.scale.setScalar(.34); tn.position.y = 1.8; G.Tn.add(tn);
   // felt layer (туурга): wall + roof, just inside the cover
@@ -156,7 +155,7 @@ export const buildGer = () => {
   G.W.add(new T.Mesh(grid(120, 4, (u, j) => {
     const ph = Math.asin(DH / 2.16), a = PI / 2 + ph + u * (2 * PI - 2 * ph), rr = [2.2, 2.18, 2.165, 2.15][j] + .006 * Math.sin(23 * a + j) + (j == 3 ? .004 * Math.sin(41 * a) : 0);
     return [Math.cos(a) * rr, [-.085, -.01, .07, .15][j] + (j == 3 ? .012 * Math.sin(15 * a + 1.3 * Math.sin(3 * a)) : 0), Math.sin(a) * rr, a * 4.2, j / 3, j == 3 ? .86 : 1];
-  }), new T.MeshStandardMaterial({ map: tx("hem", () => fabTex(1, 1, "#8a8253")), roughness: .95, metalness: 0, side: T.DoubleSide, vertexColors: true })));
+  }), new T.MeshStandardMaterial({ map: tx("hem", () => fabTex(1, 1, "#b39a6e")), roughness: .95, metalness: 0, side: T.DoubleSide, vertexColors: true })));
   // roof cloth, өрх and its ropes
   G.Rf.add(new T.Mesh(roofGeo(0), rM));
   G.Rf.add(new T.Mesh(urkhGeo(), new T.MeshStandardMaterial({
@@ -182,28 +181,13 @@ export const buildGer = () => {
   });
   // outer belts (гадуур бүслүүр): three twisted horsehair ropes, knotted beside the door
   BELT.forEach(y => rope(G.Bs, r(y) + .002, y, .02, 0x4a352a, 1));
-  // door: real frame with thickness (posts, lintel, threshold) + painted leaf
-  const wd = new T.MeshLambertMaterial({ color: 0xb5461c });
-  const fr = (w: number, h: number, d: number, x: number, y: number, z: number, ft?: T.Texture) => {
-    const f = ft ? new T.MeshLambertMaterial({ map: ft }) : wd, m = new T.Mesh(new T.BoxGeometry(w, h, d), [wd, wd, wd, wd, f, ft && d < .1 ? f : wd]);
-    m.position.set(x, y, z); G.Dr.add(m);
-  };
-  [-1, 1].forEach(s => fr(.12, .88, .21, s * .4, .44, 1.945, tex(keyV)));
-  fr(.92, .12, .21, 0, .94, 1.945, tex(key)); fr(.68, .04, .21, 0, .02, 1.945);
-  const dt = cvs(256, 400, (x, w, h) => {
-    x.fillStyle = "#d9531e"; x.fillRect(0, 0, w, h); x.strokeStyle = "#f2c35b"; x.lineWidth = 4; x.strokeRect(8, 8, w - 16, h - 16);
-    [[24, 24, 208, 44], [24, 86, 60, 230], [98, 86, 60, 230], [172, 86, 60, 230], [24, 334, 208, 44]].forEach(a => x.strokeRect(a[0], a[1], a[2], a[3]));
-    const cl = ["#e86a9a", "#2f7bd6", "#35a853", "#f2c35b"];
-    for (let i = 0; i < 7; i++) {
-      x.fillStyle = cl[i % 4]; x.beginPath(); x.arc(40 + i * 29, 46, 8, 0, 7); x.fill(); x.beginPath(); x.arc(40 + i * 29, 356, 8, 0, 7); x.fill();
-    }
-    [54, 128, 202].forEach((cx, k) => { for (let j = 0; j < 6; j++) { x.fillStyle = cl[(j + k) % 4]; x.beginPath(); x.arc(cx, 112 + j * 38, 9, 0, 7); x.fill(); } });
-  });
-  fr(.68, .84, .05, 0, .46, 1.99, tex(dt));
+  // door: its frame sits in the gap in the wall
+  const dU = new T.Group(); dU.position.z = 1.99; G.Dr.add(dU);
+  const door = doorUnit(dU);
   // exploded view offsets (hero ger): the stack opens upward from the floor
   const data: GerData = {
     ex: [[G.F, 0, 0, 0], [G.Lat, 0, .65, 0], [G.IB, 0, .65, 0], [G.FW, 0, 1.25, 0], [G.W, 0, 1.8, 0], [G.Bs, 0, 1.8, 0], [G.Dr, 0, 1, 2.1], [G.Cl, 0, 1.1, 0], [G.Un, 0, 2.1, 0], [G.FR, 0, 2.6, 0], [G.Rf, 0, 3.1, 0], [G.Tn, 0, 3.8, 0]],
-    fade: [G.FW, G.FR, G.W, G.Rf], G,
+    fade: [G.FW, G.FR, G.W, G.Rf], door, G,
   };
   g.userData = data;
   return g;

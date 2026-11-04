@@ -1,28 +1,40 @@
-import { T, bx, ms } from "../util";
+import { T, PI } from "../util";
+import { Batch, baganaTex, paintM, place } from "../craft";
 
-// багана: painted pillar with its curved capital
+const OR = 0xd8571c, GOLD = 0xf2c35b, NAVY = 0x23419e, GREEN = 0x2f8f63, ROSE = 0xc9344a;
+
+// багана: one painted pillar, about 4 tall, centred on y = 0, with its carved forked head
 export const buildBagana = () => {
-  const g = new T.Group(), OR = 0xe0601f, col = [0xe86a9a, 0x2f7bd6, 0x35a853, 0xf2c35b], n = 14;
-  bx(.2, 4, .16, OR, 0, 0, 0, g);
-  const cp: [number, number][] = [];
-  for (let i = 0; i <= n; i++) { const x = -.8 + 1.6 * i / n; cp.push([x, .15 * (x / .8) * (x / .8)]); }
-  const sh = new T.Shape();
-  cp.forEach(([x, y], i) => i ? sh.lineTo(x, y) : sh.moveTo(x, y));
-  for (let i = n; i >= 0; i--) sh.lineTo(cp[i][0], cp[i][1] - .14);
-  sh.closePath();
-  ms(new T.ExtrudeGeometry(sh, { depth: .36, bevelEnabled: false }).translate(0, 2.0, -.18), OR, g);
-  for (let i = 0; i < 12; i++) { const x = -.7 + i * .127; bx(.08, .07, .02, col[i % 4], x, 2.0 + .15 * (x / .8) * (x / .8) - .05, .19, g); }
-  [-1, 1].forEach(s => {
-    const pts: [number, number][] = [];
-    for (let i = 0; i <= 10; i++) { const u = i / 10; pts.push([s * (.06 + .58 * Math.pow(u, 1.4)), 1.0 + .95 * u]); }
-    const a = new T.Shape();
-    pts.forEach(([x, y], i) => i ? a.lineTo(x - .07, y) : a.moveTo(x - .07, y));
-    for (let i = 10; i >= 0; i--) a.lineTo(pts[i][0] + .07, pts[i][1]);
-    a.closePath();
-    ms(new T.ExtrudeGeometry(a, { depth: .12, bevelEnabled: false }).translate(0, 0, -.06), OR, g);
-    pts.forEach(([x, y], i) => { if (i % 2) ms(new T.SphereGeometry(.032, 6, 6), col[i % 4], g, x, y, .07); });
+  const g = new T.Group();
+  g.add(new T.Mesh(new T.CylinderGeometry(.15, .19, 3.05, 4, 1).rotateY(PI / 4).translate(0, -.32, 0), new T.MeshLambertMaterial({ map: baganaTex() })));
+  const b = new Batch();
+  // stepped foot
+  b.box(.44, .1, .44, 0xa83a14, 0, -1.96, 0).box(.36, .08, .36, GOLD, 0, -1.87, 0);
+  // collars where the shaft meets the head
+  ([[.27, .06, GOLD, 1.22], [.3, .09, NAVY, 1.29], [.32, .07, GOLD, 1.37]] as const).forEach(([w, h, c, y]) => b.box(w, h, w, c, 0, y, 0));
+  // the fork: two curved arms and the saddle that carries the toono
+  const arm = new T.Shape(), pts: [number, number][] = [];
+  for (let i = 0; i <= 12; i++) { const u = i / 12; pts.push([.06 + .62 * Math.pow(u, 1.5), 1.38 + .56 * u]); }
+  pts.forEach(([x, y], i) => { if (i) arm.lineTo(x + .09, y); else arm.moveTo(x + .09, y); });
+  for (let i = 12; i >= 0; i--) arm.lineTo(pts[i][0] - .09 * (1 - i / 16), pts[i][1] - .02);
+  arm.closePath();
+  [1, -1].forEach(s => {
+    b.add(new T.ExtrudeGeometry(arm, { depth: .16, bevelEnabled: false }).translate(0, 0, -.08), OR, place(0, 0, 0, 0, s < 0 ? PI : 0));
+    pts.forEach(([x, y], i) => { if (i % 3 == 1) b.ball(.036, [ROSE, GOLD, GREEN, NAVY][(i - 1) / 3 % 4], s * x, y, .088); });
   });
-  ([[0xffffff, .95], [0x2f7bd6, 1.06], [0xf2c35b, 1.17]] as const).forEach(([c, y]) => bx(.2, .09, .17, c, 0, y, 0, g));
-  for (let k = 0; k < 8; k++) ms(new T.SphereGeometry(.036, 6, 6), col[k % 4], g, 0, 1.3 + k * .08, .09);
+  const seat = new T.Shape(), n = 16;
+  for (let i = 0; i <= n; i++) { const x = -.84 + 1.68 * i / n, y = 1.94 + .13 * (x / .84) ** 2; if (i) seat.lineTo(x, y); else seat.moveTo(x, y); }
+  for (let i = n; i >= 0; i--) { const x = -.84 + 1.68 * i / n; seat.lineTo(x, 1.84 + .13 * (x / .84) ** 2); }
+  seat.closePath();
+  b.add(new T.ExtrudeGeometry(seat, { depth: .3, bevelEnabled: false }), OR, place(0, 0, -.15));
+  for (let i = 0; i < 11; i++) { const x = -.72 + i * .144; b.box(.09, .05, .012, [GOLD, NAVY, ROSE, GREEN][i % 4], x, 1.89 + .13 * (x / .84) ** 2, .155); }
+  g.add(b.mesh(paintM()));
+  return g;
+};
+
+// the pair, standing apart and turned 45 degrees
+export const buildBaganaPair = () => {
+  const g = new T.Group();
+  [-1.05, 1.05].forEach(x => { const c = buildBagana(); c.position.x = x; c.rotation.y = PI / 4; g.add(c); });
   return g;
 };

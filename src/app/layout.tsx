@@ -11,12 +11,12 @@ const description = "Explore every part of a Mongolian ger in 3D, answer questio
 export const metadata: Metadata = {
   // absolute base for the share image; set NEXT_PUBLIC_SITE_URL to the deployed origin
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  title: { default: "GerQuest — Монгол гэрийн 3D аялал", template: "%s · GerQuest" },
+  title: { default: "HOTOL — Монгол гэрийн 3D аялал", template: "%s · HOTOL" },
   description,
-  applicationName: "GerQuest",
-  keywords: ["GerQuest", "Mongolian ger", "yurt", "Монгол гэр", "3D", "education", "quiz"],
-  openGraph: { type: "website", siteName: "GerQuest", title: "GerQuest", description, locale: "mn_MN", alternateLocale: ["en_US"] },
-  twitter: { card: "summary_large_image", title: "GerQuest", description },
+  applicationName: "HOTOL",
+  keywords: ["HOTOL", "Mongolian ger", "yurt", "Монгол гэр", "3D", "education", "quiz"],
+  openGraph: { type: "website", siteName: "HOTOL", title: "HOTOL", description, locale: "mn_MN", alternateLocale: ["en_US"] },
+  twitter: { card: "summary_large_image", title: "HOTOL", description },
 };
 
 export const viewport: Viewport = {

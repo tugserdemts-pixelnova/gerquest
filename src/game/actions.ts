@@ -5,12 +5,10 @@ import { SC, maxJ, shuffle } from "./layout";
 import { cancelBuildTimers } from "./build";
 import { bShow, pulseStation } from "../three/engine";
 import { thumb } from "../three/thumbs";
-import type { Season } from "../data/seasons";
 
 let invTm = 0;
 
 export const setInv = (o: boolean) => setState({ invOpen: o });
-export const setSeason = (s: Season) => { setState({ season: s }); store.set("gerSeason", s); };
 export const toggleInv = () => { clearTimeout(invTm); setInv(!getState().invOpen); };
 
 // ── info panel ──

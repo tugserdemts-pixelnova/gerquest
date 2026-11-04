@@ -7,7 +7,7 @@ export type PartText = [string, string, string, string, string, string[]];
 
 // L[lang].P[i] = part text for D[i] · Q = extra questions · B[key] = [ok, early] · lb = hero labels (lbS = short, narrow screens)
 const RAW={mn:{
- title:"GerQuest — Монгол гэрийн 3D аялал",brand:"GerQuest",tag:"Монгол гэрийн 3D аялал",h1:"Монгол гэр",
+ title:"HOTOL — Монгол гэрийн 3D аялал",brand:"HOTOL",tag:"Монгол гэрийн 3D аялал",h1:"Монгол гэр",
  pitch:"Монгол гэрийн хэсэг бүрийг 3D-ээр судалж, асуултад хариулан цуглуулаад, эцэст нь гэрээ өөрөө бариарай.",
  f1:"Гэрийн {n} хэсгийг 3D-ээр судлах",f2:"Асуултад хариулж хэсгүүдийг цуглуулах",f3:"Гэрээ зөв дарааллаар нь барих",
  loading:"Ачааллаж байна…",nfT:"Хуудас олдсонгүй",nfSub:"Тал нутагт төөрчихсөн бололтой. Гэр рүүгээ буцъя.",home:"Нүүр хуудас руу ➜",lang:"Хэл",
@@ -18,7 +18,7 @@ const RAW={mn:{
  notYet:"✗ Арай болоогүй! «{part}»-ийн ээлж биш.",placeNext:"👉 Одоо тавих хэсэг: «{part}»",gotIt:"Ойлголоо",ready:"🏆 Гэр бэллээ!",
  builtMsg:"Та Монгол гэрийг зөв дарааллаар нь өөрөө барилаа. Алдаа: {n}",again:"↺ Дахин барих",
  loginT:"Нэвтрэх",signupT:"Бүртгүүлэх",loginSub:"Гэрийн аялалаа үргэлжлүүлэхийн тулд нэвтэрнэ үү.",email:"Имэйл",password:"Нууц үг",
- signIn:"Нэвтрэх ➜",signUp:"Бүртгүүлэх ➜",toSignUp:"Бүртгэлгүй юу? Бүртгүүлэх",toSignIn:"Бүртгэлтэй юу? Нэвтрэх",signOut:"Гарах",wait:"Түр хүлээнэ үү…",
+ signIn:"Нэвтрэх ➜",signUp:"Бүртгүүлэх ➜",showPw:"Нууц үгийг харуулах",hidePw:"Нууц үгийг нуух",heroAlt:"Тал нутагт буусан Монгол гэр, ард нь цаст уулс",badLogin:"Имэйл эсвэл нууц үг буруу байна.",taken:"Энэ имэйлээр бүртгэл үүссэн байна. Нэвтэрч орно уу.",unconfirmed:"Имэйлээ баталгаажуулаагүй байна. Ирсэн холбоос дээр дарна уу.",tooMany:"Хэт олон оролдлого хийлээ. Түр хүлээгээд дахин оролдоно уу.",signOut:"Гарах",wait:"Түр хүлээнэ үү…",
  checkEmail:"Бүртгэл үүслээ! Имэйлээ шалгаж, холбоос дээр дарж баталгаажуулна уу.",pwShort:"Нууц үг дор хаяж 6 тэмдэгттэй байх ёстой.",
  noConfig:"Supabase тохируулагдаагүй байна: .env.local файлд NEXT_PUBLIC_SUPABASE_URL болон NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY-г бичнэ үү.",
  lb:{toono:"тооно",roof:"дээд бүрээс",uni:"унь",bagana:"багана",cover:"бүрээс",wall:"хана",belt:"бүслүүр",door:"хаалга",floor:"шал",felt:"туурга"},
@@ -32,7 +32,7 @@ const RAW={mn:{
   "туурга":["Эсгий туургаар гэрээ дулаалж хучлаа.","Туурга бол гэрийн модыг гаднаас нь хучдаг эсгий. Хана, унь бүрэн босоогүй бол эсгий тогтох газаргүй."],
   "бүрээс":["Цагаан бүрээсээ нөмөргөж, гадуур бүслүүрээр чангаллаа.","Бүрээс бол хамгийн гадна талын давхарга. Эсгийг бороо, салхинаас хамгаалдаг тул туурганы дараа, хамгийн сүүлд нөмөргөнө."]}
 },en:{
- title:"GerQuest — A 3D journey into the Mongolian ger",brand:"GerQuest",tag:"A 3D journey into the Mongolian ger",h1:"Mongolian Ger",
+ title:"HOTOL — A 3D journey into the Mongolian ger",brand:"HOTOL",tag:"A 3D journey into the Mongolian ger",h1:"Mongolian Ger",
  pitch:"Explore every part of a Mongolian ger in 3D, answer questions to collect them, then build the ger yourself.",
  f1:"Explore {n} ger parts in 3D",f2:"Answer questions to collect them",f3:"Build the ger in the right order",
  loading:"Loading…",nfT:"Page not found",nfSub:"Looks like you wandered off across the steppe. Let’s head back to the ger.",home:"Back home ➜",lang:"Language",
@@ -43,7 +43,7 @@ const RAW={mn:{
  notYet:"✗ Not yet! It isn't the turn of «{part}».",placeNext:"👉 Place this next: «{part}»",gotIt:"Got it",ready:"🏆 The ger is ready!",
  builtMsg:"You built a Mongolian ger yourself, in the right order. Mistakes: {n}",again:"↺ Build again",
  loginT:"Log in",signupT:"Sign up",loginSub:"Log in to carry on with your ger tour.",email:"Email",password:"Password",
- signIn:"Log in ➜",signUp:"Sign up ➜",toSignUp:"No account? Sign up",toSignIn:"Already have an account? Log in",signOut:"Log out",wait:"Please wait…",
+ signIn:"Log in ➜",signUp:"Sign up ➜",showPw:"Show password",hidePw:"Hide password",heroAlt:"A Mongolian ger on the steppe with snow-capped mountains behind it",badLogin:"That email or password is wrong.",taken:"This email already has an account. Log in instead.",unconfirmed:"This email is not confirmed yet. Open the link we sent you.",tooMany:"Too many tries. Wait a moment and try again.",signOut:"Log out",wait:"Please wait…",
  checkEmail:"Account created! Check your email and click the link to confirm it.",pwShort:"The password must be at least 6 characters.",
  noConfig:"Supabase isn't set up: add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY to .env.local.",
  lb:{toono:"Roof ring (toono)",roof:"Roof cover",uni:"Roof poles (uni)",bagana:"Pillars (bagana)",cover:"Cover (bürees)",wall:"Lattice wall (khana)",belt:"Belt (büslüür)",door:"Door (khaalga)",floor:"Floor (shal)",felt:"Felt (tuurga)"},

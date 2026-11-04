@@ -1,16 +1,25 @@
-import { T, bx, ms } from "../util";
+import { T, PI } from "../util";
+import { Batch, hairRopeTex, paintM } from "../craft";
 
-// бүслүүр: two belts wrapped round a cloth drum
+// a twisted hair rope round the lattice, tied off with a knot and a tasselled tail
+const rope = (g: T.Object3D, R: number, y: number, tr: number, b: Batch) => {
+  const geo = new T.TorusGeometry(R, tr, 8, 90).rotateX(PI / 2), uv = geo.attributes.uv;
+  for (let i = 0; i < uv.count; i++) uv.setX(i, uv.getX(i) * R * 28);
+  const m = new T.Mesh(geo, new T.MeshLambertMaterial({ map: hairRopeTex() })); m.position.y = y; g.add(m);
+  b.ball(tr * 2.1, 0x2a1f18, R + tr, y, 0, 1, 1.2, 1.2);
+  b.add(new T.CylinderGeometry(tr * .9, tr * .9, .36, 6), 0x2a1f18, new T.Matrix4().makeRotationZ(-.28).setPosition(R + .1, y - .2, 0));
+  b.add(new T.ConeGeometry(tr * 1.5, .16, 8), 0xcdbb9c, new T.Matrix4().makeRotationZ(-.28).setPosition(R + .16, y - .4, 0));
+};
+
+// бүслүүр: two twisted hair ropes, tied off, with a spare coil at their foot
 export const buildBelt = () => {
-  const g = new T.Group(), R = 1.4;
-  ms(new T.CylinderGeometry(R, R, 1.5, 48, 1, true), 0xf6f6f2, g, 0, 0, 0, 1);
-  ms(new T.CylinderGeometry(R + .03, R + .03, .28, 48, 1, true), 0x7a7442, g, 0, -.62, 0, 1);
-  ms(new T.CylinderGeometry(R + .16, R + .16, .12, 48), 0xb98b5a, g, 0, -.82, 0);
-  [.4, -.2].forEach(y => {
-    ms(new T.CylinderGeometry(R + .04, R + .04, .12, 48, 1, true), 0x6e3b25, g, 0, y, 0, 1);
-    [.06, -.06].forEach(d => ms(new T.TorusGeometry(R + .04, .012, 5, 48).rotateX(Math.PI / 2), 0xb9824a, g, 0, y + d, 0));
-    bx(.12, .2, .12, 0x3b2a20, R + .06, y, 0, g);
-    ms(new T.ConeGeometry(.07, .4, 8).rotateZ(-Math.PI / 2), 0x6e3b25, g, R + .3, y, 0);
+  const g = new T.Group(), b = new Batch(), R = 1.4;
+  [.42, 1.06].forEach(y => rope(g, R, y, .075, b));
+  [0, 1, 2].forEach(i => {
+    const r = .44 - (i % 2) * .05, geo = new T.TorusGeometry(r, .05, 8, 40).rotateX(PI / 2), uv = geo.attributes.uv;
+    for (let k = 0; k < uv.count; k++) uv.setX(k, uv.getX(k) * 11);
+    const m = new T.Mesh(geo, new T.MeshLambertMaterial({ map: hairRopeTex() })); m.position.set(.8, .06 + i * .095, R + .55); g.add(m);
   });
+  g.add(b.mesh(paintM()));
   return g;
 };

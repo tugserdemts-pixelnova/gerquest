@@ -8,10 +8,10 @@ import BuildDone from "./BuildDone";
 
 // "build your own ger" overlay: progress pill, exit, feedback banner, part tray, finish card
 export default function BuildMode() {
-  const { bm } = useGame();
+  const { bm, story } = useGame();
   const { t } = useT();
   return (
-    <div id="bd" hidden={!bm.on}>
+    <div id="bd" className={story.on ? "st" : ""} hidden={!bm.on}>
       <span className="no" id="bpill">{`🔨 ${bm.n} / ${ORDER.length}`}</span>
       <button type="button" className="btn o" id="bxt" onClick={exitBuild}>{t("exit")}</button>
       <BuildFeedback />

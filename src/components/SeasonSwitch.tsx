@@ -1,6 +1,5 @@
-import { useGame } from "../game/store";
+import { setSeason, useGame } from "../game/store";
 import { useT, useViewport } from "../game/hooks";
-import { setSeason } from "../game/actions";
 import { SEASONS } from "../data/seasons";
 
 const ICON = { spring: "🌸", summer: "☀️", autumn: "🍂", winter: "❄️" };

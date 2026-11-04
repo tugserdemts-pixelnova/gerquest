@@ -14,6 +14,7 @@ import Labels from "./components/Labels";
 import Inventory from "./components/Inventory";
 import InfoPanel from "./components/panel/InfoPanel";
 import BuildMode from "./components/build/BuildMode";
+import Story from "./components/Story";
 import SignOut from "./components/auth/SignOut";
 
 export default function App() {
@@ -58,6 +59,7 @@ export default function App() {
       <Inventory />
       <InfoPanel />
       <BuildMode />
+      <Story />
     </>
   );
 }

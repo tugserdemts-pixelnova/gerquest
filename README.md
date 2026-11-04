@@ -1,8 +1,10 @@
-# GerQuest
+# HOTOL
 
 A 3D journey into the Mongolian ger (Монгол гэрийн 3D аялал).
 
 Scroll through an exploded ger and learn what each of its 9 parts does. Answer a question at each station to collect that part, then build the whole ger yourself, in the right order. Available in Mongolian and English.
+
+Once the ger is built, step inside as a guest: a short story shows how a Mongolian family welcomes a visitor, with a few choices along the way.
 
 ## Run it
 

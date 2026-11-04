@@ -11,7 +11,7 @@ export default function NotFound() {
   const { t, lang } = useT();
   useEffect(() => {
     document.documentElement.lang = lang;
-    document.title = t("nfT") + " · GerQuest";
+    document.title = t("nfT") + " · HOTOL";
   }, [lang]);
   return (
     <main id="login">
@@ -19,7 +19,7 @@ export default function NotFound() {
       <LangSwitch />
       <div className="lc nf">
         <Ornament />
-        <Logo size={56} />
+        <Logo size={96} />
         <span className="no">404</span>
         <h2>{t("nfT")}</h2>
         <p>{t("nfSub")}</p>

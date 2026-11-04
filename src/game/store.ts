@@ -13,6 +13,9 @@ export interface BuildState {
   dragK: string | null; shakeK: string | null;
 }
 
+// the guest visit after the build: beat i, qo = shuffled option order, qa = option picked (-1 = not answered yet)
+export interface StoryState { on: boolean; i: number; qo: number[] | null; qa: number }
+
 export interface GameState {
   lang: Lang;
   season: Season; // "gerSeason"
@@ -25,6 +28,7 @@ export interface GameState {
   pendJ: number; popJ: number; // slot waiting for its fly-in · slot that just received it
   hintKey: "hint1" | "hint2"; hintHidden: boolean;
   bm: BuildState;
+  story: StoryState;
 }
 
 const read = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -41,6 +45,7 @@ let state: GameState = {
   pendJ: 0, popJ: 0,
   hintKey: "hint1", hintHidden: false,
   bm: { on: false, n: 0, err: 0, tray: null, fb: null, hint: false, done: false, min: false, inv: false, dragK: null, shakeK: null },
+  story: { on: false, i: 0, qo: null, qa: -1 },
 };
 
 const listeners = new Set<() => void>();
@@ -50,6 +55,8 @@ export const setBm = (p: Partial<BuildState>) => setState({ bm: { ...state.bm, .
 const subscribe = (l: () => void) => { listeners.add(l); return () => { listeners.delete(l); }; };
 
 export const useGame = () => useSyncExternalStore(subscribe, getState);
+
+export const setSeason = (s: Season) => { setState({ season: s }); store.set("gerSeason", s); };
 
 export const store = {
   set: (k: string, v: string | number) => { try { localStorage.setItem(k, String(v)); } catch { /* storage blocked */ } },

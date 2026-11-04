@@ -2,7 +2,7 @@ import type { Group } from "three";
 import { buildWall } from "./wall";
 import { buildToono } from "./toono";
 import { buildUni } from "./uni";
-import { buildBagana } from "./bagana";
+import { buildBaganaPair } from "./bagana";
 import { buildBelt } from "./belt";
 import { buildCover } from "./cover";
 import { buildFelt } from "./felt";
@@ -14,7 +14,7 @@ export const B: Record<string, () => Group> = {
   "хана": buildWall,
   "тооно": buildToono,
   "унь": buildUni,
-  "багана": buildBagana,
+  "багана": buildBaganaPair,
   "бүслүүр": buildBelt,
   "бүрээс": buildCover,
   "туурга": buildFelt,

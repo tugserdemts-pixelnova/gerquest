@@ -2,6 +2,7 @@ import { T, PI, lerp, sm } from "./util";
 import { createWorld, GX, GZ, HK, BX, BZ, BAZ, BEL, HAZE, SUN, hf } from "./world";
 import { LP, labelLayer } from "./labels";
 import { createSeasons } from "./seasons";
+import { createStage } from "./story";
 import type { Season } from "../data/seasons";
 import type { GerGroup } from "./ger";
 import { N, ORDER } from "../data/parts";
@@ -22,6 +23,10 @@ let hy = -.35, hv = 0, evS = 0, evT = 0, lblA = 0, lblT = -1e5, dragHero = false
 let dwell = 0, opened = -1, sv = 0, jc = 0, zm = 0, lw = 0, lh = 0, last = performance.now(), nearJ = -1;
 let bt = 0, bd = 22, boY = 0, by = BAZ - .35, bv = 0, ringA = 0, bSnap = false;
 let dg = false, dx0 = 0, dy0 = 0, mv = 0;
+// guest story: sk = blend from the build camera to the guest's eye
+let stage: ReturnType<typeof createStage> | null = null, sk = 0;
+const sP = new T.Vector3(), sL = new T.Vector3();
+let soY = 0;
 
 // build ger part animations (0 drop in · 1 fall + fade in · 2 belt tightens · 3 shadow grows)
 interface Anim { o: T.Object3D; ty: number; t0: number }
@@ -123,9 +128,22 @@ function loop(now: number) {
     const far = hP.distanceTo(bP); hP.lerp(bP, e); hP.y += Math.sin(PI * e) * Math.min(45, far * .16); hL.lerp(bL, e);
     fov = lerp(fov, 42, e); ox *= 1 - e; oy = lerp(oy, boY, e);
   }
+  // guest story: the camera becomes the visitor's eye; the stage exists only once somebody has built the ger and stepped in
+  sk = Math.max(0, Math.min(1, sk + (st.story.on ? dt : -dt) / 1.4));
+  if (sk > 0) {
+    const s = stage || (stage = createStage(w.bO, w.bD.door));
+    s.root.visible = true;
+    const c = s.tick(st.story.i, dt, now), e = sk * sk * (3 - 2 * sk);
+    w.bGer.updateMatrixWorld();
+    sP.set(c[0], c[1], c[2]); sL.set(c[3], c[4], c[5]); w.bGer.localToWorld(sP); w.bGer.localToWorld(sL);
+    // lift the view so the dialogue card does not cover what it is talking about
+    const card = st.story.on ? document.getElementById("stc") : null;
+    soY += ((card ? card.offsetHeight * .42 : 0) - soY) * Math.min(1, dt * 3);
+    hP.lerp(sP, e); hL.lerp(sL, e); fov = lerp(fov, W < Hh ? 70 : 54, e); ox *= 1 - e; oy = lerp(oy, soY, e);
+  } else if (stage && stage.root.visible) { stage.root.visible = false; stage.reset(); }
   // build mode looks down at the site, so the far peaks would crowd the top of the view: fade them into the haze
   // (winter and autumn add a little haze of their own)
-  const mf = 1 - (1 - .6 * bt * bt * (3 - 2 * bt)) * (1 - sea.mtn());
+  const mf = 1 - (1 - .6 * bt * bt * (3 - 2 * bt) * (1 - sk)) * (1 - sea.mtn());
   w.mtnM.color.setScalar(1 - mf); w.mtnM.emissive.copy(w.look.sky.uniforms.hz.value).multiplyScalar(mf);
   cam.position.copy(hP); cam.lookAt(hL); cam.fov = fov; cam.setViewOffset(W, Hh, ox, oy, W, Hh);
   // the shadow box rides along with whatever the camera looks at; the sky stays centred on the camera
@@ -154,7 +172,9 @@ function loop(now: number) {
   if (hintHidden !== st.hintHidden || hintKey !== st.hintKey) setState({ hintHidden, hintKey });
   sv *= Math.exp(-dt * 5);
   // build ger: turning, part animations, drop ring
-  if (!(dg && bm.on)) { by += dt * (bv + (bm.on && bm.n >= ORDER.length ? .25 : 0)); bv *= Math.exp(-dt * 2.5); }
+  // during the story the door turns to face the visitor and stays there
+  if (sk > 0) { by += (BAZ + Math.round((by - BAZ) / (2 * PI)) * 2 * PI - by) * Math.min(1, dt * 3); bv = 0; }
+  else if (!(dg && bm.on)) { by += dt * (bv + (bm.on && bm.n >= ORDER.length ? .25 : 0)); bv *= Math.exp(-dt * 2.5); }
   w.bGer.rotation.y = by;
   if (anims.length) anims = anims.filter(A => {
     const k = (now - A.t0) / (A.ty == 1 ? 700 : 600);
@@ -194,6 +214,7 @@ function bindPointer() {
     if (!dg) return;
     const { panel, bm, cj } = getState(), ST = w.ST;
     const dx = e.clientX - dx0, dy = e.clientY - dy0; mv += Math.abs(dx) + Math.abs(dy); dx0 = e.clientX; dy0 = e.clientY;
+    if (getState().story.on) return;
     if (bm.on) { by += dx * .012; bv = Math.max(-6, Math.min(6, dx * .012 * 60)); }
     else if (panel && ST[cj]) { ST[cj].spin += dx * .012; sv = dx * .012; ST[cj].pivot.rotation.x = Math.max(-.35, Math.min(.45, ST[cj].pivot.rotation.x + dy * .008)); }
     else if (dragHero) { hy += dx * .012; hv = Math.max(-6, Math.min(6, dx * .012 * 60)); lblT = performance.now(); }

@@ -48,9 +48,9 @@ export const edgeTex = () => aniso(new T.CanvasTexture(cvs2(256, 64, (x, w, h) =
 
 export const feltTex = (rx: number, ry: number) => {
   const t = new T.CanvasTexture(cvs2(128, 128, (x, w, h) => {
-    x.fillStyle = "#b0a488"; x.fillRect(0, 0, w, h); x.lineWidth = 1;
+    x.fillStyle = "#e0d4ba"; x.fillRect(0, 0, w, h); x.lineWidth = 1;
     for (let k = 0; k < 1100; k++) {
-      x.strokeStyle = k % 2 ? "rgba(255,250,235,.14)" : "rgba(70,60,45,.14)";
+      x.strokeStyle = k % 2 ? "rgba(255,250,235,.1)" : "rgba(70,60,45,.09)";
       const X = Math.random() * w, Y = Math.random() * h, a = Math.random() * 7;
       x.beginPath(); x.moveTo(X, Y); x.lineTo(X + Math.cos(a) * 5, Y + Math.sin(a) * 5); x.stroke();
     }
@@ -59,7 +59,7 @@ export const feltTex = (rx: number, ry: number) => {
 };
 
 export const spiralTex = () => new T.CanvasTexture(cvs2(128, 128, (x, w, h) => {
-  x.fillStyle = "#a89b7e"; x.fillRect(0, 0, w, h); x.strokeStyle = "rgba(70,58,40,.75)"; x.lineWidth = 2.5; x.beginPath();
+  x.fillStyle = "#d8ccb0"; x.fillRect(0, 0, w, h); x.strokeStyle = "rgba(92,66,40,.7)"; x.lineWidth = 2.5; x.beginPath();
   for (let a = 0; a < 38; a += .1) { const r = 3 + a * 1.5; x[a ? "lineTo" : "moveTo"](64 + Math.cos(a) * r, 64 + Math.sin(a) * r); }
   x.stroke();
 }));
