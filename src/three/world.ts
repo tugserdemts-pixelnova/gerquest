@@ -115,7 +115,7 @@ export function createWorld(S: T.Scene) {
   (grass.instanceColor as T.InstancedBufferAttribute).copyArray(paintGrass(SUMMER_GRASS));
   grass.receiveShadow = true; S.add(grass);
   const flowerC = [0xffffff, 0xfff3c4, 0xffd23f, 0xb48ae6, 0xf28cb8], blooms = spots(900, (x, z, d) => d > 3.6 && Math.sin(x * .05) * Math.cos(z * .04) > -.2);
-  const flowers = new T.InstancedMesh(new T.IcosahedronGeometry(.11, 0), new T.MeshLambertMaterial(), blooms.length);
+  const flowers = new T.InstancedMesh(new T.IcosahedronGeometry(.08, 0), new T.MeshLambertMaterial(), blooms.length);
   blooms.forEach(([x, z], i) => {
     flowers.setMatrixAt(i, mx.compose(V.set(x, hf(x, z) + .28 + rnd() * .2, z), qt.identity(), Sc.setScalar(.8 + rnd() * .7)));
     flowers.setColorAt(i, cl.set(flowerC[Math.floor(rnd() * flowerC.length)]));

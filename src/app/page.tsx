@@ -8,5 +8,5 @@ const App = dynamic(() => import("../App"), { ssr: false, loading: Splash });
 const AuthGate = dynamic(() => import("../components/auth/AuthGate"), { ssr: false, loading: Splash });
 
 export default function Page() {
-  return <App />; // TEMP-BYPASS
+  return <AuthGate><App /></AuthGate>;
 }
