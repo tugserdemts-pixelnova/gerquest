@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from "react";
 import { N } from "../data/parts";
 import type { Lang } from "../data/i18n";
+import { SEASONS, type Season } from "../data/seasons";
 
 export type PanelMode = null | "info" | "quiz";
 export type Feedback = { ty: "tip" } | { ty: "ok" | "bad"; k: string };
@@ -14,6 +15,7 @@ export interface BuildState {
 
 export interface GameState {
   lang: Lang;
+  season: Season; // "gerSeason"
   u: number; // parts collected ("gerU3")
   built: number; // stars of the best finished build ("gerB3", 0 = not built yet)
   panel: PanelMode; cj: number; pdone: boolean;
@@ -30,6 +32,7 @@ const u0 = Math.min(N, +(read("gerU3") || 0) || 0);
 
 let state: GameState = {
   lang: read("gerLang") == "en" ? "en" : "mn",
+  season: SEASONS.find(s => s == read("gerSeason")) || "summer",
   u: u0,
   built: u0 == N ? Math.min(3, +(read("gerB3") || 0) || 0) : 0,
   panel: null, cj: 0, pdone: false,

@@ -19,7 +19,7 @@ export default function Steppe() {
         <ellipse cx="32" cy="49" rx="30" ry="4" fill="#000" opacity=".1" />
         <path d="M9 33 C17 22 25 17.5 32 17.5 S47 22 55 33 Z" fill="#fff" />
         <rect x="12" y="33" width="40" height="15" fill="#fbf6ea" />
-        <path d="M12 36.5H52M12 44.5H52" stroke="#2a2f8f" strokeWidth="1.2" />
+        <path d="M12 36.5H52M12 44.5H52" stroke="#1f4597" strokeWidth="1.2" />
         <rect x="27.5" y="35" width="9" height="13" rx="1" fill="#e2582a" />
         <ellipse cx="32" cy="18.5" rx="6" ry="2.4" fill="#e2582a" />
       </g>

@@ -1,6 +1,8 @@
 import { T, PI, lerp, sm } from "./util";
 import { createWorld, GX, GZ, HK, BX, BZ, BAZ, BEL, HAZE, SUN, hf } from "./world";
 import { LP, labelLayer } from "./labels";
+import { createSeasons } from "./seasons";
+import type { Season } from "../data/seasons";
 import type { GerGroup } from "./ger";
 import { N, ORDER } from "../data/parts";
 import { getState, setState } from "../game/store";
@@ -9,7 +11,7 @@ import { openPanel } from "../game/actions";
 import { dragRef } from "../game/build";
 
 type World = ReturnType<typeof createWorld>;
-let R: T.WebGLRenderer, S: T.Scene, cam: T.PerspectiveCamera, w: World, cv: HTMLCanvasElement, sun: T.DirectionalLight;
+let R: T.WebGLRenderer, S: T.Scene, cam: T.PerspectiveCamera, w: World, cv: HTMLCanvasElement, sun: T.DirectionalLight, sea: ReturnType<typeof createSeasons>;
 let started = false;
 
 // screen-space ellipse around the build ger, used to test drops
@@ -122,7 +124,9 @@ function loop(now: number) {
     fov = lerp(fov, 42, e); ox *= 1 - e; oy = lerp(oy, boY, e);
   }
   // build mode looks down at the site, so the far peaks would crowd the top of the view: fade them into the haze
-  const mf = .6 * bt * bt * (3 - 2 * bt); w.mtnM.color.setScalar(1 - mf); w.mtnM.emissive.set(HAZE).multiplyScalar(mf);
+  // (winter and autumn add a little haze of their own)
+  const mf = 1 - (1 - .6 * bt * bt * (3 - 2 * bt)) * (1 - sea.mtn());
+  w.mtnM.color.setScalar(1 - mf); w.mtnM.emissive.copy(w.look.sky.uniforms.hz.value).multiplyScalar(mf);
   cam.position.copy(hP); cam.lookAt(hL); cam.fov = fov; cam.setViewOffset(W, Hh, ox, oy, W, Hh);
   // the shadow box rides along with whatever the camera looks at; the sky stays centred on the camera
   sun.target.position.copy(hL); sun.position.copy(hL).addScaledVector(SUN, 9); sun.target.updateMatrixWorld();
@@ -165,6 +169,7 @@ function loop(now: number) {
   const hot = !!(dragRef.cur && dragRef.cur.over), rm = w.bRing.material as T.MeshBasicMaterial;
   ringA += ((bm.on && bm.n < ORDER.length ? (hot ? 1 : .3) : 0) - ringA) * Math.min(1, dt * 8);
   w.bRing.visible = ringA > .01; rm.opacity = ringA * (hot ? .8 + .2 * Math.sin(now / 80) : 1); w.bRing.scale.setScalar(hot ? 1.03 + .02 * Math.sin(now / 120) : 1);
+  sea.tick(dt, now, cam.position); w.animals(now, dt);
   R.render(S, cam); drawLabels();
   if (bt > 0) {
     V3.set(BX, .2 + HK * .95, BZ).project(cam);
@@ -203,6 +208,9 @@ function bindPointer() {
   };
 }
 
+// sky, light, ground, trees and weather blend over to another season
+export function applySeason(s: Season) { if (started) sea.set(s); }
+
 // station visibility + ring colour follow the collected count
 export function refreshStations(u: number) {
   if (!started) return;
@@ -219,7 +227,7 @@ export function initEngine(canvas: HTMLCanvasElement) {
   R = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: "high-performance" }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
   R.shadowMap.enabled = true; R.shadowMap.type = T.PCFSoftShadowMap;
   S = new T.Scene(); cam = new T.PerspectiveCamera(38, 1, .1, 50); cam.position.set(0, 0, 9);
-  S.add(new T.HemisphereLight(0xf2f8ff, 0x8a7a55, .95));
+  const hemi = new T.HemisphereLight(0xf2f8ff, 0x8a7a55, .95); S.add(hemi);
   // warm sun with soft shadows over a 90×90 box around the view target
   sun = new T.DirectionalLight(0xfff3dd, .85); sun.position.copy(SUN); sun.castShadow = true;
   const sc = sun.shadow.camera, big = Math.min(innerWidth, innerHeight) > 500;
@@ -229,6 +237,7 @@ export function initEngine(canvas: HTMLCanvasElement) {
   w = createWorld(S);
   bindPointer();
   const st = getState();
+  sea = createSeasons(S, w, hemi, sun); sea.set(st.season, true);
   refreshStations(st.u);
   bShow(st.built > 0);
   requestAnimationFrame(loop);

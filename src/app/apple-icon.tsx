@@ -10,7 +10,7 @@ export default async function AppleIcon() {
   const icon = "data:image/svg+xml;base64," + (await readFile(join(process.cwd(), "src/app/icon.svg"))).toString("base64");
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", background: "#23285e" }}>
+      <div style={{ width: "100%", height: "100%", display: "flex", background: "#16295a" }}>
         <img src={icon} width={180} height={180} />
       </div>
     ),

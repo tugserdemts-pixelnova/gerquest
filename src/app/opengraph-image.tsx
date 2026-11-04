@@ -27,10 +27,10 @@ export default async function Image() {
   ];
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(#7fc0ec, #d9ecf2 70%, #f6f0b8)", color: "#23285e", fontFamily: "Nunito" }}>
-        <img src={icon} width={180} height={180} style={{ borderRadius: 44, boxShadow: "0 14px 0 #f2c35b" }} />
+      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(#7fc0ec, #d9ecf2 70%, #f6f0b8)", color: "#16295a", fontFamily: "Nunito" }}>
+        <img src={icon} width={180} height={180} style={{ borderRadius: 44, boxShadow: "0 14px 0 #f4c24d" }} />
         <div style={{ fontSize: 150, fontWeight: 900, letterSpacing: -5, marginTop: 36, display: "flex" }}>
-          <span>Ger</span><span style={{ color: "#d9531e" }}>Quest</span>
+          <span>Ger</span><span style={{ color: "#c23f24" }}>Quest</span>
         </div>
         <div style={{ fontSize: 44, fontWeight: 800, marginTop: 4 }}>{TAG}</div>
       </div>

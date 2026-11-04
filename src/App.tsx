@@ -3,10 +3,11 @@ import { getState, useGame } from "./game/store";
 import { SC, maxJ } from "./game/layout";
 import { killDrag } from "./game/build";
 import { t } from "./data/i18n";
-import { refreshStations, setJc } from "./three/engine";
+import { applySeason, refreshStations, setJc } from "./three/engine";
 import Scene from "./components/Scene";
 import Spacer from "./components/Spacer";
 import LangSwitch from "./components/LangSwitch";
+import SeasonSwitch from "./components/SeasonSwitch";
 import Hero from "./components/Hero";
 import Hint from "./components/Hint";
 import Labels from "./components/Labels";
@@ -16,7 +17,7 @@ import BuildMode from "./components/build/BuildMode";
 import SignOut from "./components/auth/SignOut";
 
 export default function App() {
-  const { lang, u, panel, bm } = useGame();
+  const { lang, u, panel, bm, season } = useGame();
   const lock = !!panel || bm.on;
 
   // language: page title + <html lang>
@@ -35,6 +36,9 @@ export default function App() {
 
   useEffect(() => refreshStations(u), [u]);
 
+  // the scene blends to the new season; the UI picks up its accent colour
+  useEffect(() => { applySeason(season); document.documentElement.dataset.season = season; }, [season]);
+
   // start where the visitor left off
   useEffect(() => {
     const { u } = getState();
@@ -46,6 +50,7 @@ export default function App() {
       <Spacer />
       <Scene />
       <LangSwitch />
+      <SeasonSwitch />
       <SignOut />
       <Hero />
       <Hint />
