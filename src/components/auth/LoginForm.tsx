@@ -2,14 +2,9 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../auth/supabase";
 import { useSession } from "../../auth/useSession";
-import { useGame } from "../../game/store";
 import { useT } from "../../game/hooks";
-import { SEASONS } from "../../data/seasons";
-import Ornament from "../Ornament";
-import LangSwitch from "../LangSwitch";
-import SeasonSwitch from "../SeasonSwitch";
+import Settings from "../Settings";
 import Logo from "../Logo";
-import GerSpin from "./GerSpin";
 
 type Mode = "in" | "up";
 
@@ -30,10 +25,9 @@ const Eye = ({ off }: { off: boolean }) => (
   </svg>
 );
 
-// the steppe, a turning ger taken apart into its parts, and the email/password card: log in, or switch to creating an account
+// logo and email/password card: log in, or switch to creating an account
 export default function LoginForm() {
   const { t, lang } = useT();
-  const { season } = useGame();
   const router = useRouter(), session = useSession();
   const [mode, setMode] = useState<Mode>("in");
   const [email, setEmail] = useState(""), [password, setPassword] = useState("");
@@ -47,7 +41,6 @@ export default function LoginForm() {
     document.documentElement.lang = lang;
     document.title = t(mode == "in" ? "loginT" : "signupT") + " · HOTOL";
   }, [lang, mode]);
-  useEffect(() => { document.documentElement.dataset.season = season; }, [season]);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -66,28 +59,14 @@ export default function LoginForm() {
 
   return (
     <main id="auth">
-      <div className="abg">
-        {SEASONS.map(s => (
-          <img key={s} className={s == season ? "on" : ""} src={`/login/${s}.webp`} width={1920} height={1080} alt={s == season ? t("heroAlt") : ""} />
-        ))}
-      </div>
-      <GerSpin />
-      <LangSwitch />
-      <SeasonSwitch />
-      <section className="abr">
-        <div>
-          <h1><Logo size={210} /></h1>
-          <p className="atag">{t("tag")}</p>
-        </div>
-      </section>
+      <Settings seasons={false} />
       <form className="ac" onSubmit={submit} aria-label={t(mode == "in" ? "loginT" : "signupT")}>
-        <Ornament />
+        <h1><Logo size={104} src="/logo-login.webp" /></h1>
         <div className="atabs" role="group">
           {(["in", "up"] as const).map(m => (
             <button key={m} type="button" aria-pressed={m == mode} onClick={() => pick(m)}>{t(m == "in" ? "loginT" : "signupT")}</button>
           ))}
         </div>
-        <p>{t(mode == "in" ? "loginSub" : "pitch")}</p>
         {!supabase && <div className="lm bad">{t("noConfig")}</div>}
         <label>
           {t("email")}

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useT } from "../game/hooks";
 import Ornament from "./Ornament";
-import LangSwitch from "./LangSwitch";
+import Settings from "./Settings";
 import Logo from "./Logo";
 import Steppe from "./Steppe";
 
@@ -16,7 +16,7 @@ export default function NotFound() {
   return (
     <main id="login">
       <Steppe />
-      <LangSwitch />
+      <Settings seasons={false} />
       <div className="lc nf">
         <Ornament />
         <Logo size={96} />

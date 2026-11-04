@@ -6,8 +6,7 @@ import { t } from "./data/i18n";
 import { applySeason, refreshStations, setJc } from "./three/engine";
 import Scene from "./components/Scene";
 import Spacer from "./components/Spacer";
-import LangSwitch from "./components/LangSwitch";
-import SeasonSwitch from "./components/SeasonSwitch";
+import Settings from "./components/Settings";
 import Hero from "./components/Hero";
 import Hint from "./components/Hint";
 import Labels from "./components/Labels";
@@ -50,8 +49,7 @@ export default function App() {
     <>
       <Spacer />
       <Scene />
-      <LangSwitch />
-      <SeasonSwitch />
+      <Settings />
       <SignOut />
       <Hero />
       <Hint />
