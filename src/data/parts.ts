@@ -32,4 +32,4 @@ export const IX: Record<string, number> = {};
 D.forEach((d, i) => (IX[d[0]] = i));
 
 // build order
-export const ORDER = ["шал", "хана", "хаалга", "бүслүүр", "багана", "тооно", "унь", "туурга", "бүрээс"];
+export const ORDER = ["шал", "хаалга", "хана", "бүслүүр", "багана", "тооно", "унь", "туурга", "бүрээс"];
