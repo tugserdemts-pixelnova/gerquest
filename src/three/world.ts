@@ -2,6 +2,7 @@ import { T, M, sm } from "./util";
 import { B } from "./parts";
 import { buildGer, type GerData } from "./ger";
 import { addAnimals } from "./animals";
+import { createForest, type TreeSpot } from "./trees";
 import { D, N } from "../data/parts";
 
 export const px = (z: number) => Math.sin(z * .05) * 8, ZS = 24;
@@ -72,15 +73,14 @@ export function createWorld(S: T.Scene) {
     o.position.set(x, y === undefined ? hf(x, z) : y, z); S.add(o); if (y === undefined) shade(o); return o;
   };
   const side = () => rnd() < .5 ? -1 : 1;
-  // pines: trunk + three tiers in one of three palettes (the seasons recolour these materials)
-  const gT = new T.CylinderGeometry(.18, .3, 1.8, 6), tiers = [[1.75, 2.5, 2.1], [1.35, 2.2, 3.2], [.92, 2, 4.3]].map(([r, h, y]) => [new T.ConeGeometry(r, h, 8), y] as const);
-  const mT = M(0x5e4026), pal = [[0x2f6332, 0x3b7438, 0x478540], [0x3a6e36, 0x467f3d, 0x549046], [0x2c5a35, 0x376b3c, 0x427a44]].map(p => p.map(c => M(c)));
+  // the spots the trees stand on; which tree stands there is up to the season
+  const stands: TreeSpot[] = [];
   for (let k = 0; k < 140; k++) {
-    const z = 40 - rnd() * 330, x = px(z) + side() * (9 + rnd() * 80), g = new T.Group(), p = pal[Math.floor(rnd() * 3)];
-    const tr = new T.Mesh(gT, mT); tr.position.y = .9; g.add(tr);
-    tiers.forEach(([ge, y], i) => { const m = new T.Mesh(ge, p[i]); m.position.y = y; m.rotation.y = rnd() * 3; g.add(m); });
-    g.scale.setScalar(.8 + rnd() * 1.1); g.rotation.z = (rnd() - .5) * .06; at(g, x, z);
+    const z = 40 - rnd() * 330, x = px(z) + side() * (9 + rnd() * 80), v = Math.floor(rnd() * 3), wide = .92 + rnd() * .16, tall = .9 + rnd() * .3, ry = rnd() * 7, sc = .8 + rnd() * 1.1, rz = (rnd() - .5) * .06;
+    const o = at(new T.Object3D(), x, z);
+    if (o.parent) { S.remove(o); stands.push({ x, y: o.position.y, z, ry, rz, sx: sc * wide, sy: sc * tall, v }); }
   }
+  const forest = createForest(S, stands);
   const gR = new T.DodecahedronGeometry(1), mR = M(0x8a857c), mR2 = M(0x77736c);
   for (let k = 0; k < 70; k++) {
     const z = 30 - rnd() * 320, x = px(z) + side() * (5 + rnd() * 45), m = new T.Mesh(gR, k % 3 ? mR : mR2);
@@ -200,6 +200,6 @@ export function createWorld(S: T.Scene) {
   const cC = new T.CatmullRomCurve3(cp), lC = new T.CatmullRomCurve3(lp);
 
   // what the seasons repaint
-  const look = { sky: sky.material as T.ShaderMaterial, ground: gg.attributes.color as T.BufferAttribute, paintGround, grass, paintGrass, flowers, pines: pal, rocks: [mR, mR2], clouds: mCl };
-  return { sky, mtnM, look, animals, heroGer, heroO, heroD: heroO.userData as GerData, bGer, bO, bD: bO.userData as GerData, bRing, ST, hits, cC, lC };
+  const look = { sky: sky.material as T.ShaderMaterial, ground: gg.attributes.color as T.BufferAttribute, paintGround, grass, paintGrass, flowers, rocks: [mR, mR2], clouds: mCl };
+  return { sky, mtnM, look, forest, animals, heroGer, heroO, heroD: heroO.userData as GerData, bGer, bO, bD: bO.userData as GerData, bRing, ST, hits, cC, lC };
 }

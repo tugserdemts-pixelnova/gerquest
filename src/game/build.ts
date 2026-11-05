@@ -3,7 +3,7 @@ import { IX, N, ORDER } from "../data/parts";
 import { getState, setState, setBm, store } from "./store";
 import { shuffle } from "./layout";
 import { closePanel, setInv } from "./actions";
-import { bShow, buildTarget, queueStep, snapBuildCam } from "../three/engine";
+import { bShow, buildTarget, queueStep, setJc, snapBuildCam } from "../three/engine";
 import { thumb } from "../three/thumbs";
 
 let fbTm = 0, finTm = 0, shakeTm = 0;
@@ -33,12 +33,14 @@ export function enterBuild() {
   if (s.bm.done || !s.bm.tray) newBuild();
 }
 export function exitBuild() {
-  const { bm } = getState();
+  const { bm, built } = getState();
   if (!bm.on) return;
   killDrag();
   setBm({ on: false });
   setState({ invAway: false });
   setInv(bm.inv);
+  // with the ger built the game is over: back to the title and the whole ger, not down at the last station
+  if (built) { scrollTo(0, 0); setJc(0); }
 }
 
 // ghost image that follows the pointer (same look as the inventory fly-in)

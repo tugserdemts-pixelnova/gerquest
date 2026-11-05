@@ -8,7 +8,7 @@ import type { GerGroup } from "./ger";
 import { N, ORDER } from "../data/parts";
 import { getState, setState } from "../game/store";
 import { HS, SP, maxJ, dom } from "../game/layout";
-import { openPanel } from "../game/actions";
+import { openDone, openPanel } from "../game/actions";
 import { dragRef } from "../game/build";
 
 type World = ReturnType<typeof createWorld>;
@@ -166,7 +166,11 @@ function loop(now: number) {
     const nj = Math.round(jc), nr = (nj >= 1 && nj <= mj && Math.abs(jc - nj) < .12) ? nj : -1;
     if (nr !== nearJ) { nearJ = nr; dwell = 0; } else dwell += dt;
     if (nr < 0) opened = -1;
-    else if (dwell > .35 && nr !== opened) { opened = nr; if (!panel) openPanel(nr); }
+    else if (dwell > .35 && nr !== opened) {
+      opened = nr;
+      // every part collected and the ger not built yet: the last station offers the build, it has nothing else left to ask
+      if (!panel) { if (nr == N && st.u == N && !st.built) openDone(); else openPanel(nr); }
+    }
   }
   const hintHidden = !!panel || bm.on || jc > N - .4, hintKey = hp < .98 ? "hint1" : "hint2";
   if (hintHidden !== st.hintHidden || hintKey !== st.hintKey) setState({ hintHidden, hintKey });

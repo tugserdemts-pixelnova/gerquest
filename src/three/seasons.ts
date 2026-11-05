@@ -6,37 +6,33 @@ import type { Season } from "../data/seasons";
 
 type Fx = "pollen" | "petals" | "leaves" | "snow";
 // one season's look: sky (horizon haze = fog colour, zenith, sun glow), hemisphere + sun light, fog range,
-// ground / grass / pine (3 palettes × 3 tiers) / rock / cloud colours, wildflowers on or off, falling weather, extra mountain haze
+// ground / grass / rock / cloud colours, wildflowers on or off, falling weather, extra mountain haze
 interface Look {
   haze: number; zen: number; glow: number; hemi: [number, number, number]; sun: [number, number]; fog: [number, number];
-  ground: GroundPal; grass: number[]; pines: number[][]; rocks: number[]; cloud: [number, number]; flowers: boolean; fx: Fx; mtn: number;
+  ground: GroundPal; grass: number[]; rocks: number[]; cloud: [number, number]; flowers: boolean; fx: Fx; mtn: number;
 }
 
 const LOOKS: Record<Season, Look> = {
+  // the steppe is still straw-coloured from the winter, with the first green only just coming through, under a pale dusty sky
   spring: {
-    haze: 0xdff0ea, zen: 0x5ba7e4, glow: 0xfff4dc, hemi: [0xf4fff6, 0x8a8560, .95], sun: [0xfff8ea, .82], fog: [40, 230],
-    ground: [0x5f8f3c, 0x7cab4a, 0x86904c, 0xa69273, 0x77726a], grass: [0x6a9c3c, 0x7fb048, 0x92bf55, 0x6f9440],
-    pines: [[0x3a7a3c, 0x4a8e46, 0x5ca452], [0x44843f, 0x55974a, 0x68ab56], [0x356a3c, 0x427d45, 0x52904f]],
-    rocks: [0x8a857c, 0x77736c], cloud: [0xffffff, 0x56677a], flowers: true, fx: "petals", mtn: 0,
+    haze: 0xeeeadb, zen: 0x7ab4e6, glow: 0xfff0d2, hemi: [0xf6f8ea, 0x948a64, .95], sun: [0xfff4e0, .8], fog: [36, 205],
+    ground: [0x83964e, 0x7fb04c, 0x9c9458, 0xa99672, 0x857e72], grass: [0xa9a862, 0x93b858, 0x7fbc54, 0xb7ac74],
+    rocks: [0x8f897e, 0x7c776e], cloud: [0xffffff, 0x6c7888], flowers: true, fx: "petals", mtn: .1,
   },
   summer: {
     haze: 0xd9ecf2, zen: 0x3f8fd8, glow: 0xffeec7, hemi: [0xf2f8ff, 0x8a7a55, .95], sun: [0xfff3dd, .85], fog: [40, 240],
     ground: SUMMER_GROUND, grass: SUMMER_GRASS,
-    pines: [[0x2f6332, 0x3b7438, 0x478540], [0x3a6e36, 0x467f3d, 0x549046], [0x2c5a35, 0x376b3c, 0x427a44]],
     rocks: [0x8a857c, 0x77736c], cloud: [0xffffff, 0x4a5868], flowers: true, fx: "pollen", mtn: 0,
   },
-  // larches turn gold and rust; the third palette stays evergreen
   autumn: {
     haze: 0xf0e2c8, zen: 0x5f93cc, glow: 0xffd59a, hemi: [0xfff0d8, 0x7a6448, .88], sun: [0xffd8a0, .86], fog: [38, 220],
     ground: [0x857a3c, 0x958844, 0x8c6e36, 0x9a8260, 0x6e665c], grass: [0xa89346, 0xb89c4c, 0x9a7a3a, 0x847238],
-    pines: [[0xb8781e, 0xd09030, 0xe2aa3e], [0xc0621e, 0xd67a2a, 0xe8963a], [0x2c5a35, 0x376b3c, 0x427a44]],
     rocks: [0x8a8278, 0x77706a], cloud: [0xfff6ea, 0x5a5460], flowers: false, fx: "leaves", mtn: .08,
   },
-  // snow on the ground and on the upper pine tiers, straw-coloured grass poking through, a low pale sun
+  // snow on the ground, straw-coloured grass poking through, a low pale sun
   winter: {
     haze: 0xe4ebf2, zen: 0x8db2d8, glow: 0xf2f6ff, hemi: [0xeef4ff, 0x9aa6b8, .85], sun: [0xe6eeff, .55], fog: [30, 200],
     ground: [0xd0d8e2, 0xe2e8f0, 0xc4cedb, 0xb3ac9f, 0xa6adb6], grass: [0xc8b98a, 0xb5a676, 0xd6cba4, 0xa89a70],
-    pines: [[0x4f6e66, 0x8fa8a2, 0xdfe9ea], [0x557568, 0x98b0a8, 0xe6eeee], [0x46625c, 0x86a09a, 0xd6e2e2]],
     rocks: [0xc2c6cc, 0xaeb3ba], cloud: [0xeef2f6, 0x6a7486], flowers: false, fx: "snow", mtn: .22,
   },
 };
@@ -67,8 +63,8 @@ export function createSeasons(S: T.Scene, w: World, hemi: T.HemisphereLight, sun
   const L = w.look, U = L.sky.uniforms, fog = S.fog as T.Fog, cloud = L.clouds;
   // every colour a season drives, in the same order as cols() lists them
   const targets: T.Color[] = [U.hz.value, U.zen.value, U.glow.value, fog.color, hemi.color, hemi.groundColor, sun.color,
-    ...L.pines.flat().map(m => m.color), ...L.rocks.map(m => m.color), cloud.color, cloud.emissive];
-  const cols = (l: Look) => [l.haze, l.zen, l.glow, l.haze, l.hemi[0], l.hemi[1], l.sun[0], ...l.pines.flat(), ...l.rocks, ...l.cloud].map(c => new T.Color(c));
+    ...L.rocks.map(m => m.color), cloud.color, cloud.emissive];
+  const cols = (l: Look) => [l.haze, l.zen, l.glow, l.haze, l.hemi[0], l.hemi[1], l.sun[0], ...l.rocks, ...l.cloud].map(c => new T.Color(c));
   const nums = (l: Look) => [l.hemi[2], l.sun[1], l.fog[0], l.fog[1], l.mtn];
   let cur = nums(LOOKS.summer);
   const writeNums = (n: number[]) => { hemi.intensity = n[0]; sun.intensity = n[1]; fog.near = n[2]; fog.far = n[3]; cur = n; };
@@ -122,12 +118,13 @@ export function createSeasons(S: T.Scene, w: World, hemi: T.HemisphereLight, sun
       from = k >= 1 ? to : (k < .5 ? from : to);
       fromCols = targets.map(c => c.clone()); fromNums = cur; fromG = gArr.slice(); fromS = sArr.slice();
       to = s; toCols = cols(LOOKS[s]); toNums = nums(LOOKS[s]); k = 0; t0 = performance.now();
-      if (instant) { from = s; k = 1; apply(1); }
+      if (instant) { from = s; k = 1; apply(1); w.forest.snap(s); }
     },
     // extra haze the mountains get this season (0 = none)
     mtn: () => cur[4],
     tick(dt: number, t: number, cam: T.Vector3) {
       if (k < 1) { k = Math.min(1, (t - t0) / 1800); apply(sm(0, 1, k)); }
+      w.forest.tick(to, t);
       if (!fx || pm.opacity <= 0) return;
       const [n, , , vy, sw] = FX[fx];
       for (let i = 0; i < n; i++) {

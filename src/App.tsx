@@ -39,10 +39,10 @@ export default function App() {
   // the scene blends to the new season; the UI picks up its accent colour
   useEffect(() => { applySeason(season); document.documentElement.dataset.season = season; }, [season]);
 
-  // start where the visitor left off
+  // start where the visitor left off; someone who has finished starts from the top
   useEffect(() => {
-    const { u } = getState();
-    if (u > 0) { scrollTo(0, SC(maxJ(u))); setJc(maxJ(u)); }
+    const { u, built } = getState();
+    if (u > 0 && !built) { scrollTo(0, SC(maxJ(u))); setJc(maxJ(u)); }
   }, []);
 
   return (
