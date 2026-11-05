@@ -98,7 +98,7 @@ const rope = (Q: T.Object3D, R: number, y: number, tr: number, col: number, tail
   });
 };
 
-export const GER_GROUPS = ["Sh", "F", "W", "Dr", "Rf", "Tn", "Pp", "Lat", "IB", "Cl", "Un", "FW", "FR", "Bs"] as const;
+export const GER_GROUPS = ["Sh", "F", "W", "Dr", "Rf", "Tn", "Pp", "Lat", "Cl", "Un", "FW", "FR", "Bs"] as const;
 export type GerGroup = typeof GER_GROUPS[number];
 export interface GerData {
   ex: [T.Object3D, number, number, number][]; // exploded view offsets
@@ -138,8 +138,6 @@ export const buildGer = () => {
   G.F.add(plankFloor(2.1, false));
   // lattice wall, open at the doorway
   wallLat(G.Lat, 1.9, 1.1, 60, [1.326, 1.816]);
-  // inner belt (дотуур бүслүүр): two ropes at the lattice radius
-  [.38, .78].forEach(y => rope(G.IB, 1.93, y, .014, 0x8a5632));
   // columns: stand on the floor and carry the toono
   [-.55, .55].forEach(x => { const c = buildBagana(); c.scale.set(.36, .4375, .36); c.position.set(x, .875, 0); c.rotation.y = PI / 4; G.Cl.add(c); });
   // uni poles: thin end in the toono ring, other end on the wall heads
@@ -186,7 +184,7 @@ export const buildGer = () => {
   const door = doorUnit(dU);
   // exploded view offsets (hero ger): the stack opens upward from the floor
   const data: GerData = {
-    ex: [[G.F, 0, 0, 0], [G.Lat, 0, .65, 0], [G.IB, 0, .65, 0], [G.FW, 0, 1.25, 0], [G.W, 0, 1.8, 0], [G.Bs, 0, 1.8, 0], [G.Dr, 0, 1, 2.1], [G.Cl, 0, 1.1, 0], [G.Un, 0, 2.1, 0], [G.FR, 0, 2.6, 0], [G.Rf, 0, 3.1, 0], [G.Tn, 0, 3.8, 0]],
+    ex: [[G.F, 0, 0, 0], [G.Lat, 0, .65, 0], [G.FW, 0, 1.25, 0], [G.W, 0, 1.8, 0], [G.Bs, 0, 1.8, 0], [G.Dr, 0, 1, 2.1], [G.Cl, 0, 1.1, 0], [G.Un, 0, 2.1, 0], [G.FR, 0, 2.6, 0], [G.Rf, 0, 3.1, 0], [G.Tn, 0, 3.8, 0]],
     fade: [G.FW, G.FR, G.W, G.Rf], door, G,
   };
   g.userData = data;

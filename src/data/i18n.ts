@@ -23,14 +23,14 @@ const RAW={mn:{
  noConfig:"Supabase тохируулагдаагүй байна: .env.local файлд NEXT_PUBLIC_SUPABASE_URL болон NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY-г бичнэ үү.",
  lb:{toono:"тооно",roof:"дээд бүрээс",uni:"унь",bagana:"багана",cover:"бүрээс",wall:"хана",belt:"бүслүүр",door:"хаалга",floor:"шал",felt:"туурга"},
  B:{"шал":["Шал бол гэрийн суурь. Бүх зүйл үүн дээр тогтоно.",""],
-  "хана":["Ханаа хаалганы хоёр талаас эхлэн шалыг тойруулж дэлгээд, хаалгатайгаа дээсээр холболоо.","Хана хаалганы хоёр талаас эхэлж дугуйрдаг. Эхлээд хаалгаа босгоорой."],
-  "хаалга":["Хаалгаа шалан дээр нар тийш харуулж босголоо. Хана үүнээс эхэлж дугуйрна.","Хаалга шалан дээр зогсдог. Шалгүй бол хаалгаа босгох газар алга."],
-  "бүслүүр":["Дотуур бүслүүрээр ханаа тойруулан чангаллаа. Одоо хана тэлэхгүй.","Бүслүүр бол хаалганы нэг талаас нөгөө тал хүртэл ханыг тойруулж татдаг дээс. Хана, хаалга хоёр босоогүй бол бүслэх юм алга."],
-  "багана":["Хоёр багана гэрийн голд босов. Одоо тооноо өргөхөд бэлэн.","Багана босгохоос өмнө хана, хаалгаа бүслүүрээр чангалсан байх ёстой. Тэгэхгүй бол дээврийн жин ханыг гадагш түлхэж, гэр хазайна."],
+  "хана":["Ханаа шалыг тойруулан дэлгэж, хооронд нь дээсээр холболоо.","Хана шалан дээр тойрон зогсдог. Суурь шалгүй бол хана тэгш, тогтвортой зогсохгүй."],
+  "хаалга":["Хаалгыг ханын хоёр үзүүрийн завсарт босгож холболоо.","Хаалга ганцаараа зогсож чадахгүй — түүнийг ханын хоёр үзүүрт холбож бэхэлдэг."],
+  "бүслүүр":["Гадуур бүслүүрээр бүрээсээ чангаллаа. Гэр бэлэн боллоо!","Гадуур бүслүүр бүрээсийг гаднаас нь чангалдаг. Бүрээс тавигдаагүй бол бүслэх юм алга."],
+  "багана":["Хоёр багана гэрийн голд босов. Одоо тооноо өргөхөд бэлэн.","Багана босгохоос өмнө хана, хаалгаа босгож, хооронд нь дээсээр холбосон байх ёстой. Тэгэхгүй бол дээврийн жин ханыг гадагш түлхэж, гэр хазайна."],
   "тооно":["Тооныг баганаар тулж дээш өргөлөө.","Тооно агаарт өөрөө тогтохгүй — түүнийг хоёр баганаар тулж өргөдөг."],
   "унь":["Унийн нарийн үзүүрийг тооны нүхэнд, нөгөө үзүүрийг ханын толгойд өлгөлөө.","Унийн нэг үзүүр тооны нүхэнд, нөгөө үзүүр ханын толгойд тогтдог. Тооно, хана хоёулаа бэлэн байх хэрэгтэй."],
   "туурга":["Эсгий туургаар гэрээ дулаалж хучлаа.","Туурга бол гэрийн модыг гаднаас нь хучдаг эсгий. Хана, унь бүрэн босоогүй бол эсгий тогтох газаргүй."],
-  "бүрээс":["Цагаан бүрээсээ нөмөргөж, гадуур бүслүүрээр чангаллаа.","Бүрээс бол хамгийн гадна талын давхарга. Эсгийг бороо, салхинаас хамгаалдаг тул туурганы дараа, хамгийн сүүлд нөмөргөнө."]}
+  "бүрээс":["Цагаан бүрээсээ нөмөргөлөө. Одоо гаднаас нь бүслүүрээр чангална.","Бүрээс бол хамгийн гадна талын давхарга. Эсгийг бороо, салхинаас хамгаалдаг тул туурганы дараа нөмөргөнө."]}
 },en:{
  title:"HOTOL — A 3D journey into the Mongolian ger",brand:"HOTOL",tag:"A 3D journey into the Mongolian ger",h1:"Mongolian Ger",
  pitch:"Explore every part of a Mongolian ger in 3D, answer questions to collect them, then build the ger yourself.",
@@ -69,14 +69,14 @@ const RAW={mn:{
  [["From which centuries did people start using wooden doors?",["The 18th and 19th centuries","The 5th century","The 21st century"]],["Long ago, how did people go in and out of a ger?",["By lifting up a felt flap","By pushing a glass door","By crawling through a tunnel"]]],
  [["The floor is an important part that decides what?",["How warm and comfortable the ger is","The colour of the ger","The shape of the door"]],["What boards is the floor put together from?",["Size 2, 2.5 or 3 boards","Size 10 boards","Size 50 boards"]]]],
  B:{"шал":["The floor is the base of the ger. Everything stands on it.",""],
-  "хана":["You opened the lattice walls around the floor from both sides of the door and tied them to it with rope.","The walls ring the floor starting from both sides of the door. Stand the door first."],
-  "хаалга":["You stood the door on the floor, facing the sun. The walls will ring out from here.","The door stands on the floor. Without a floor there is nowhere to stand it."],
-  "бүслүүр":["You tightened the inner belt around the walls. Now they can't spread.","The belt is a rope pulled around the walls from one side of the door to the other. With no walls and door standing, there is nothing to tie."],
-  "багана":["Two pillars stand in the middle of the ger, ready to lift the toono.","Before raising the pillars, the walls and door must be tightened with the belt. Otherwise the weight of the roof pushes the walls outward and the ger leans."],
+  "хана":["You opened the lattice walls around the floor and tied them together with rope.","The walls stand in a circle on the floor. Without the floor they can't stand level and steady."],
+  "хаалга":["You stood the door in the gap between the two wall ends and tied it in.","The door can't stand on its own. It is tied to the two ends of the wall."],
+  "бүслүүр":["You tightened the cover with the outer belts. The ger is finished!","The outer belts tighten the cover from outside. With no cover on, there is nothing to tie."],
+  "багана":["Two pillars stand in the middle of the ger, ready to lift the toono.","Before raising the pillars, the walls and door must be standing and tied together with rope. Otherwise the weight of the roof pushes the walls outward and the ger leans."],
   "тооно":["You lifted the toono up on the pillars.","The toono can't float in the air. It is held up by the two pillars."],
   "унь":["You set the thin end of each pole into the toono and hung the other end on top of the wall.","One end of each pole sits in the toono and the other on top of the wall. Both the toono and the walls must be ready."],
   "туурга":["You wrapped the ger in felt to keep it warm.","The felt covers the wooden frame from the outside. Until the walls and poles are up, it has nothing to rest on."],
-  "бүрээс":["You pulled on the white cover and tightened it with the outer belts.","The cover is the outermost layer. It protects the felt from rain and wind, so it goes on last, after the felt."]}
+  "бүрээс":["You pulled on the white cover. Now the belts tighten it from outside.","The cover is the outermost layer. It protects the felt from rain and wind, so it goes on after the felt."]}
 }};
 
 type Strings = Omit<typeof RAW.en, "P" | "Q" | "lbS" | "B"> & {

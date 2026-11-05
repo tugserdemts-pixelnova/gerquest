@@ -33,8 +33,8 @@ interface Anim { o: T.Object3D; ty: number; t0: number }
 let anims: Anim[] = [];
 // what each part reveals on the build ger: [group, animation type, delay s]
 const BSTEP: Record<string, [GerGroup, number, number][]> = {
-  "шал": [["Sh", 3, 0], ["F", 0, 0]], "хана": [["Lat", 0, 0]], "хаалга": [["Dr", 0, 0]], "бүслүүр": [["IB", 2, 0]], "багана": [["Cl", 0, 0]],
-  "тооно": [["Tn", 0, 0]], "унь": [["Un", 0, 0]], "туурга": [["FW", 1, 0], ["FR", 1, .2]], "бүрээс": [["W", 1, 0], ["Rf", 1, .25], ["Bs", 2, .95]],
+  "шал": [["Sh", 3, 0], ["F", 0, 0]], "хана": [["Lat", 0, 0]], "хаалга": [["Dr", 0, 0]], "багана": [["Cl", 0, 0]],
+  "тооно": [["Tn", 0, 0]], "унь": [["Un", 0, 0]], "туурга": [["FW", 1, 0], ["FR", 1, .2]], "бүрээс": [["W", 1, 0], ["Rf", 1, .25]], "бүслүүр": [["Bs", 2, 0]],
 };
 
 // fade: drives transparent / opacity / depthWrite on every material under q

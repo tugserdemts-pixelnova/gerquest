@@ -2,7 +2,7 @@ import { T, PI } from "./util";
 import { Batch, chestTex, hangingTex, paintM, photoTex, place, quiltBedTex, shirdegTex } from "./craft";
 
 // the inside of the ger, in ger units: door at +z (south), west = -x, the place of honour (хоймор) at -z (north)
-export const SEAT: [number, number] = [-1.42, .42], HOST_SEAT: [number, number] = [-.15, -1.2], TABLE: [number, number] = [-.78, -.52];
+export const SEAT: [number, number] = [-1.42, .42], HOST_SEAT: [number, number] = [-.15, -1.2], TABLE: [number, number] = [-.88, -.7];
 
 const OR = 0xd8571c, DEEP = 0xa83a14, GOLD = 0xf2c35b, NAVY = 0x23419e, GREEN = 0x2f8f63, ROSE = 0xc9344a, IRON = 0x2a2725, STEEL = 0x9ea3a9, HIDE = 0x4a3020, WOOD = 0x7a3f1c;
 
