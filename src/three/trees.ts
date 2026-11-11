@@ -2,7 +2,7 @@ import { T, PI, sm } from "./util";
 import { Batch } from "./craft";
 import type { Season } from "../data/seasons";
 
-// every season has its own tree, standing on the same spots: a blossoming tree in spring, the pine in summer,
+// every season has its own tree, standing on the same spots: a young willow in spring, Mongolian larch in summer,
 // the golden birch in autumn and a bare, snow-laden tree in winter. Each kind is a few shapes drawn as instances
 
 // its own seed, so that shaping the trees leaves the rest of the scenery where it is
@@ -75,27 +75,33 @@ function branch(b: Batch, A: T.Vector3, dir: T.Vector3, len: number, rad: number
 }
 const trunkBase = (b: Batch, r: number, c: number) => b.cyl(r, r * 1.5, .34, c, 0, .17, 0, 7);
 
-const PINE = [[0x2f6332, 0x3b7438, 0x478540], [0x3a6e36, 0x467f3d, 0x549046], [0x2c5a35, 0x376b3c, 0x427a44]];
+const LARCH = [[0x55783b, 0x6e9146, 0x83a64f], [0x648443, 0x7c9a4c, 0x91ad57], [0x4d713a, 0x638545, 0x7c9d50]];
 const LAYERS: [number, number, number, number][] = [[1.9, 1.7, 1.25, 0], [1.62, 1.6, 2, 0], [1.3, 1.5, 2.75, 1], [.95, 1.4, 3.5, 1], [.58, 1.5, 4.2, 2]];
-const BLOSSOM = [[0xf6b3cd, 0xfcd7e4], [0xf9c4d8, 0xffe6ee], [0xf09cbc, 0xf9c4d8]], GOLD = [[0xe8a92e, 0xf4c648], [0xdc8a26, 0xeeab38], [0xefb935, 0xf8d65a]];
+const WILLOW = [[0x789b42, 0x9dbb59], [0x86a84a, 0xa8c566], [0x6f9140, 0x91ad50]], GOLD = [[0xe8a92e, 0xf4c648], [0xdc8a26, 0xeeab38], [0xefb935, 0xf8d65a]];
 
 const SHAPE: Record<Season, (v: number) => T.BufferGeometry> = {
   summer(v) {
     const b = new Batch();
     b.cyl(.04, .27, 4.7, 0x5e4026, 0, 2.35, 0, 7); trunkBase(b, .27, 0x4a3220);
-    LAYERS.forEach(([r, h, y, s]) => b.raw(bough(r, h, y, PINE[v][s])));
+    // Siberian larch has a lighter, softer spring-green crown than the dark pine it replaces.
+    LAYERS.forEach(([r, h, y, s]) => b.raw(bough(r, h, y, LARCH[v][s])));
     return b.geo();
   },
   spring(v) {
-    const b = new Batch(), ends: T.Vector3[] = [], [c0, c1] = BLOSSOM[v];
-    trunkBase(b, .24, 0x3f2c22);
-    branch(b, new T.Vector3(0, 0, 0), new T.Vector3((rnd() - .5) * .2, 1, (rnd() - .5) * .2).normalize(), 2.1, .25, 2, 0x4a3428, ends);
-    // loose sprays of blossom along the branch ends, with small ones around them so the crown stays airy
-    ends.forEach((e, i) => {
-      clump(b, .68 + rnd() * .24, e.x, e.y + .12, e.z, i % 2 ? c1 : c0);
-      clump(b, .38 + rnd() * .14, e.x + (rnd() - .5) * 1.2, e.y + (rnd() - .4) * .7, e.z + (rnd() - .5) * 1.2, i % 2 ? c0 : c1, .82, 0);
-    });
-    clump(b, .8, 0, 3.4, 0, c1);
+    const b = new Batch(), [c0, c1] = WILLOW[v];
+    // A willow common along Mongolian rivers: narrow crown, flexible drooping limbs and fresh leaves.
+    b.cyl(.045, .22, 4.2, 0x70513a, 0, 2.1, 0, 7); trunkBase(b, .22, 0x59402f);
+    for (let i = 0; i < 11; i++) {
+      const a = i * 2 * PI / 11 + rnd() * .22, y = 2.0 + rnd() * 1.55;
+      const start = new T.Vector3(0, y, 0), end = new T.Vector3(Math.cos(a) * (1.0 + rnd() * .35), y - .65 - rnd() * .45, Math.sin(a) * (1.0 + rnd() * .35));
+      limb(b, start, end, .075, .025, 0x74543a);
+      for (let j = 0; j < 3; j++) {
+        const t = .38 + j * .2, x = start.x + (end.x - start.x) * t, z = start.z + (end.z - start.z) * t;
+        const leafY = start.y + (end.y - start.y) * t;
+        clump(b, .34 + rnd() * .1, x, leafY, z, (i + j) % 2 ? c1 : c0, 1.25, 0);
+      }
+      clump(b, .32, end.x, end.y, end.z, c1, 1.3, 0);
+    }
     return b.geo();
   },
   autumn(v) {
