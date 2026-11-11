@@ -2,7 +2,7 @@ import { T, PI, sm } from "./util";
 import { Batch } from "./craft";
 import type { Season } from "../data/seasons";
 
-// every season has its own tree, standing on the same spots: a flowering broad-canopy tree in spring, Mongolian linden in summer,
+// every season has its own tree, standing on the same spots: a blossoming tree in spring, the pine in summer,
 // the golden birch in autumn and a bare, snow-laden tree in winter. Each kind is a few shapes drawn as instances
 
 // its own seed, so that shaping the trees leaves the rest of the scenery where it is
@@ -75,40 +75,27 @@ function branch(b: Batch, A: T.Vector3, dir: T.Vector3, len: number, rad: number
 }
 const trunkBase = (b: Batch, r: number, c: number) => b.cyl(r, r * 1.5, .34, c, 0, .17, 0, 7);
 
-const LINDEN = [[0x527b36, 0x709746, 0x8cae58], [0x5b843a, 0x7da34c, 0x98b85d], [0x496f34, 0x6b9143, 0x87a950]];
-const BLOOM = [[0xe9eee0, 0xfaf8ed, 0xfffdf4], [0xe7eddf, 0xf8f5e8, 0xffffff], [0xdfe8d8, 0xf4f4e8, 0xfdfbf2]];
-const GOLD = [[0xe8a92e, 0xf4c648], [0xdc8a26, 0xeeab38], [0xefb935, 0xf8d65a]];
+const PINE = [[0x2f6332, 0x3b7438, 0x478540], [0x3a6e36, 0x467f3d, 0x549046], [0x2c5a35, 0x376b3c, 0x427a44]];
+const LAYERS: [number, number, number, number][] = [[1.9, 1.7, 1.25, 0], [1.62, 1.6, 2, 0], [1.3, 1.5, 2.75, 1], [.95, 1.4, 3.5, 1], [.58, 1.5, 4.2, 2]];
+const BLOSSOM = [[0xf6b3cd, 0xfcd7e4], [0xf9c4d8, 0xffe6ee], [0xf09cbc, 0xf9c4d8]], GOLD = [[0xe8a92e, 0xf4c648], [0xdc8a26, 0xeeab38], [0xefb935, 0xf8d65a]];
 
 const SHAPE: Record<Season, (v: number) => T.BufferGeometry> = {
   summer(v) {
     const b = new Batch();
-    // Mongolian linden: a stout grey-brown trunk and a broad, rounded crown of dense leaves.
-    b.cyl(.07, .3, 3.25, 0x665342, 0, 1.62, 0, 8); trunkBase(b, .3, 0x514333);
-    const ends: T.Vector3[] = [];
-    for (let i = 0; i < 8; i++) {
-      const a = i * 2 * PI / 8 + .18, y = 2.05 + (i % 3) * .22;
-      const start = new T.Vector3(0, y, 0), end = new T.Vector3(Math.cos(a) * (1.35 + (i % 2) * .25), 3.45 + (i % 3) * .28, Math.sin(a) * (1.35 + (i % 2) * .25));
-      branch(b, start, end.clone().sub(start).normalize(), end.distanceTo(start), .105, 1, 0x594838, ends);
-    }
-    // Overlapping leaf masses make a full, domed silhouette like the supplied summer tree.
-    [[0, 4.18, 0, .95], [0, 3.82, 0, 1.12], [-.82, 3.62, .28, .88], [.82, 3.65, -.25, .9], [.28, 3.55, .78, .85], [-.28, 3.6, -.78, .86], [-1.28, 3.25, -.25, .7], [1.25, 3.3, .2, .72], [0, 3.28, 1.28, .68], [0, 3.25, -1.28, .68]].forEach(([x, y, z, r], i) => clump(b, r, x, y, z, LINDEN[v][i % 3], .9, 1));
+    b.cyl(.04, .27, 4.7, 0x5e4026, 0, 2.35, 0, 7); trunkBase(b, .27, 0x4a3220);
+    LAYERS.forEach(([r, h, y, s]) => b.raw(bough(r, h, y, PINE[v][s])));
     return b.geo();
   },
   spring(v) {
-    const b = new Batch(), colors = BLOOM[v];
-    // A mature, low-spreading flowering tree with visible limbs and a cloud of pale spring blossoms.
-    b.cyl(.06, .34, 2.65, 0x70503a, 0, 1.32, 0, 8); trunkBase(b, .34, 0x59402f);
-    const ends: T.Vector3[] = [];
-    for (let i = 0; i < 9; i++) {
-      const a = i * 2 * PI / 9 + .12, y = 1.65 + (i % 3) * .22;
-      const start = new T.Vector3(0, y, 0), end = new T.Vector3(Math.cos(a) * (1.75 + (i % 2) * .3), 2.95 + (i % 3) * .22, Math.sin(a) * (1.75 + (i % 2) * .3));
-      branch(b, start, end.clone().sub(start).normalize(), end.distanceTo(start), .12, 1, 0x694b38, ends);
-    }
-    // broad blossom clusters, with a few soft pink notes among the ivory flowers
-    [[0, 3.5, 0, .82], [-.8, 3.22, .25, .82], [.78, 3.24, -.25, .86], [.24, 3.18, .8, .78], [-.28, 3.18, -.78, .8], [-1.45, 2.92, -.18, .72], [1.42, 2.94, .2, .76], [0, 2.95, 1.42, .68], [0, 2.92, -1.4, .7], [-.78, 3.72, -.38, .62], [.8, 3.72, .35, .64]].forEach(([x, y, z, r], i) => {
-      clump(b, r, x, y, z, colors[i % 3], .82, 1);
-      if (i % 2 === 0) clump(b, r * .36, x + .12, y + .1, z + .08, 0xf3c8d0, .9, 0);
+    const b = new Batch(), ends: T.Vector3[] = [], [c0, c1] = BLOSSOM[v];
+    trunkBase(b, .24, 0x3f2c22);
+    branch(b, new T.Vector3(0, 0, 0), new T.Vector3((rnd() - .5) * .2, 1, (rnd() - .5) * .2).normalize(), 2.1, .25, 2, 0x4a3428, ends);
+    // loose sprays of blossom along the branch ends, with small ones around them so the crown stays airy
+    ends.forEach((e, i) => {
+      clump(b, .68 + rnd() * .24, e.x, e.y + .12, e.z, i % 2 ? c1 : c0);
+      clump(b, .38 + rnd() * .14, e.x + (rnd() - .5) * 1.2, e.y + (rnd() - .4) * .7, e.z + (rnd() - .5) * 1.2, i % 2 ? c0 : c1, .82, 0);
     });
+    clump(b, .8, 0, 3.4, 0, c1);
     return b.geo();
   },
   autumn(v) {
