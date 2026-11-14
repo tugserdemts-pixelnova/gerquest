@@ -139,11 +139,13 @@ export const buildGer = () => {
   // lattice wall, open at the doorway
   wallLat(G.Lat, 1.9, 1.1, 60, [1.326, 1.816]);
   // columns: stand on the floor and carry the toono
-  [-.55, .55].forEach(x => { const c = buildBagana(); c.scale.set(.36, .4375, .36); c.position.set(x, .875, 0); c.rotation.y = PI / 4; G.Cl.add(c); });
+  [-.5, .5].forEach(x => { const c = buildBagana(); c.scale.set(.36, .4375, .36); c.position.set(x, .875, 0); c.rotation.y = PI / 2; G.Cl.add(c); });
   // uni poles: thin end in the toono ring, other end on the wall heads
   uniRing(UNI, G.Un, .53, 1.755, 1.94, 1.1);
   // toono wheel
-  const tn = buildToono(); tn.scale.setScalar(.34); tn.position.y = 1.8; G.Tn.add(tn);
+  // Keep the assembled height inside the group: build animations move G.Tn itself.
+  const tn = new T.Group(); tn.position.y = 1.8;
+  const wheel = buildToono(); wheel.scale.setScalar(.34); tn.add(wheel); G.Tn.add(tn);
   // felt layer (туурга): wall + roof, just inside the cover
   const fT = tx("felt", () => feltTex(9, 3)), fM = new T.MeshStandardMaterial({ map: fT, bumpMap: fT, bumpScale: .012, roughness: 1, metalness: 0, side: T.DoubleSide, vertexColors: true });
   G.FW.add(new T.Mesh(wallGeo(.5, -.03), fM), new T.Mesh(wallGeo(.5, -.03, 0, 1), fM)); G.FR.add(new T.Mesh(roofGeo(1), fM));

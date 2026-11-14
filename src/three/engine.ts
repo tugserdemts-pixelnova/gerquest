@@ -178,7 +178,7 @@ function loop(now: number) {
   // build ger: turning, part animations, drop ring
   // during the story the door turns to face the visitor and stays there
   if (sk > 0) { by += (BAZ + Math.round((by - BAZ) / (2 * PI)) * 2 * PI - by) * Math.min(1, dt * 3); bv = 0; }
-  else if (!(dg && bm.on)) { by += dt * (bv + (bm.on && bm.n >= ORDER.length ? .25 : 0)); bv *= Math.exp(-dt * 2.5); }
+  else if (!(dg && bm.on)) { by += dt * bv; bv *= Math.exp(-dt * 2.5); }
   w.bGer.rotation.y = by;
   if (anims.length) anims = anims.filter(A => {
     const k = (now - A.t0) / (A.ty == 1 ? 700 : 600);
