@@ -13,9 +13,13 @@ export const toggleInv = () => { clearTimeout(invTm); setInv(!getState().invOpen
 
 // ── info panel ──
 export function openPanel(j: number) {
-  setState({ cj: j, qi: 0, qo: null, qa: -1, pdone: false, panel: "info", invAway: false, invOpen: false });
+  const { u, built } = getState();
+  // Once the final part is collected, the last station becomes the completion card.
+  // This also handles the auto-scroll/open-panel race after collecting part 9.
+  const pdone = j == N && u == N && !built;
+  setState({ cj: j, qi: 0, qo: null, qa: -1, pdone, panel: "info", invAway: false, invOpen: false });
 }
-export function openDone() { openPanel(N); setState({ pdone: true }); }
+export function openDone() { openPanel(N); }
 export function closePanel() { setState({ panel: null, invAway: false }); }
 export const backToInfo = () => setState({ panel: "info" });
 
@@ -30,6 +34,7 @@ function showQ(qi: number) {
   setState({ qi, qo: shuffle(qList(cj)[qi][1].map((_, i) => i)), qa: -1 });
 }
 export function startQuiz() { setState({ panel: "quiz" }); showQ(getState().qi); }
+export function restartQuiz() { showQ(0); }
 export function pick(i: number) { if (getState().qa < 0) setState({ qa: i }); }
 export function nextQ() { const { qi, cj } = getState(); showQ((qi + 1) % qList(cj).length); }
 
@@ -64,8 +69,9 @@ export function goToStation(j: number) {
 export function resetProgress() {
   store.set("gerU3", 0); store.remove("gerB3");
   cancelBuildTimers();
-  setState({ u: 0, built: 0, popJ: 0 });
-  setBm({ tray: null, done: false });
+  clearTimeout(invTm);
+  setState({ u: 0, built: 0, popJ: 0, pendJ: 0, panel: null, cj: 0, pdone: false, qi: 0, qo: null, qa: -1, invOpen: false, invAway: false, story: { on: false, i: 0, qo: null, qa: -1 } });
+  setBm({ on: false, n: 0, err: 0, tray: null, fb: null, hint: false, done: false, min: false, dragK: null, shakeK: null });
   bShow(false);
   scrollTo({ top: 0, behavior: "smooth" });
 }

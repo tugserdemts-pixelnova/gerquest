@@ -108,7 +108,9 @@ function loop(now: number) {
   if (W !== lw || Hh !== lh) { lw = W; lh = Hh; R.setSize(W, Hh, false); cam.aspect = W / Hh; }
   const jt = panel ? cj : Math.min(mj, Math.max(0, (scrollY - HS()) / SP()));
   jc += (jt - jc) * Math.min(1, dt * 6); zm += ((panel ? 1 : 0) - zm) * Math.min(1, dt * 6);
-  w.cC.getPoint(jc / N, v1); w.lC.getPoint(jc / N, v2);
+  // Keep the curve parameter inside [0, 1], including the last station and restored progress.
+  const pathT = Number.isFinite(jc) && N > 0 ? Math.max(0, Math.min(1, jc / N)) : 0;
+  w.cC.getPoint(pathT, v1); w.lC.getPoint(pathT, v2);
   const hp = Math.min(1, Math.max(0, scrollY / HS())), bl = sm(0, .6, jc), gy = hf(GX, GZ), dd = 22 * Math.max(1, .95 / (W / Hh));
   evT = sm(.05, .8, hp); evS += (evT - evS) * Math.min(1, dt * 6);
   hP.set(GX, gy + HK * lerp(2.6, 4.6, evS), GZ + dd).lerp(v1, bl); hL.set(GX, gy + HK * lerp(.95, 2.75, evS), GZ).lerp(v2, bl);
@@ -249,20 +251,24 @@ export function refreshStations(u: number) {
 export function initEngine(canvas: HTMLCanvasElement) {
   if (started) return;
   started = true; cv = canvas;
-  R = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: "high-performance" }); R.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 4;
+  const constrained = (navigator.hardwareConcurrency || 4) <= 4 || memory <= 4;
+  const pixelRatio = Math.min(devicePixelRatio, constrained ? 1 : 1.5);
+  R = new T.WebGLRenderer({ canvas: cv, antialias: !constrained, alpha: true, powerPreference: "high-performance" }); R.setPixelRatio(pixelRatio);
   R.shadowMap.enabled = true; R.shadowMap.type = T.PCFSoftShadowMap;
   S = new T.Scene(); cam = new T.PerspectiveCamera(38, 1, .1, 50); cam.position.set(0, 0, 9);
   const hemi = new T.HemisphereLight(0xf2f8ff, 0x8a7a55, .95); S.add(hemi);
   // warm sun with soft shadows over a 90×90 box around the view target
   sun = new T.DirectionalLight(0xfff3dd, .85); sun.position.copy(SUN); sun.castShadow = true;
   const sc = sun.shadow.camera, big = Math.min(innerWidth, innerHeight) > 500;
-  sun.shadow.mapSize.set(big ? 2048 : 1536, big ? 2048 : 1536); sc.left = sc.bottom = -45; sc.right = sc.top = 45; sc.near = 1; sc.far = 220;
+  const shadowSize = constrained ? 1024 : big ? 1536 : 1024;
+  sun.shadow.mapSize.set(shadowSize, shadowSize); sc.left = sc.bottom = -45; sc.right = sc.top = 45; sc.near = 1; sc.far = 220;
   sun.shadow.bias = -.0006; sun.shadow.normalBias = .03; sun.shadow.radius = 3; S.add(sun, sun.target);
   S.fog = new T.Fog(HAZE, 40, 240); cam.fov = 50; cam.far = 900; cam.near = .5;
   w = createWorld(S);
   bindPointer();
   const st = getState();
-  sea = createSeasons(S, w, hemi, sun); sea.set(st.season, true);
+  sea = createSeasons(S, w, hemi, sun, constrained ? .4 : 1); sea.set(st.season, true);
   refreshStations(st.u);
   bShow(st.built > 0);
   requestAnimationFrame(loop);

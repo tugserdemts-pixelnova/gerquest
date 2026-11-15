@@ -21,6 +21,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 #pn.on{opacity:1;transform:translate(0,-50%);pointer-events:auto}
 @media(max-width:800px){#pn{left:10px;right:10px;width:auto;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-height:50vh;transform:translateY(40px)}#pn.on{transform:none}}
 #pn h2{font-size:clamp(30px,4vw,46px);margin:4px 0 8px;font-weight:900;line-height:1.05}#pn h3{margin:0 0 8px;font-weight:900}#pn p{line-height:1.65;margin:0 0 10px;font-size:16.5px;font-weight:600}
+.quiz-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.quiz-actions .btn{margin-right:0}
 .no{display:inline-block;background:var(--gold);color:#16295a;border:2px solid var(--edge);border-radius:20px;padding:1px 12px;font-size:13px;font-weight:900;letter-spacing:.06em}
 .bar{height:7px;width:90px;border-radius:4px;margin-bottom:14px}
 .opt{display:block;width:100%;margin-top:9px;border:2.5px solid var(--edge);background:var(--slot);color:var(--ink);padding:12px 14px;border-radius:14px;text-align:left;font:800 15.5px var(--font-nunito),system-ui,sans-serif;cursor:pointer;transition:.15s}
@@ -94,7 +95,7 @@ button.sl{cursor:pointer;transition:.15s}button.sl:hover{transform:translateY(-3
 .lm{overflow-wrap:anywhere;border:2.5px solid;border-radius:14px;padding:9px 12px;font-weight:800;font-size:14.5px;line-height:1.4;margin-bottom:12px}.lm.ok{background:#dff5e0;color:#143d19;border-color:#2e8b4e}.lm.bad{background:#fbe1e1;color:#5c1515;border-color:#c8423b}
 #so{position:fixed;z-index:39;top:calc(env(safe-area-inset-top,0px) + 18px);left:66px;height:32px;padding:0 14px;border:2.5px solid var(--edge);border-radius:18px;background:var(--card);color:var(--ink);font:900 13px var(--font-nunito),system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 var(--edge)}
 /* the settings menu; the active season wears its accent */
-:root{--sea:#f4c24d}:root[data-season="spring"]{--sea:#f2a7c3}:root[data-season="autumn"]{--sea:#e8913a}:root[data-season="winter"]{--sea:#a9d4f2}
+:root{--sea:#f4c24d}:root[data-season="spring"]{--sea:#f2a7c3}:root[data-season="autumn"]{--sea:#e8913a}:root[data-season="winter"]{--sea:#d7473e;--edge:#a83232;--or:#b52f2f;--gold:#f2c35b}
 /* guest story: a dialogue card over the scene; the build controls step aside */
 #bd.st #bpill,#bd.st #bxt{display:none}
 #st{position:fixed;inset:0;z-index:14;pointer-events:none}#st>*{pointer-events:auto}

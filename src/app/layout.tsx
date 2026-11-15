@@ -6,7 +6,7 @@ import "../styles.css";
 // self-hosted by next/font; cyrillic covers the Mongolian text
 const nunito = Nunito({ subsets: ["latin", "cyrillic"], weight: ["600", "700", "800", "900"], variable: "--font-nunito", display: "swap" });
 
-const description = "Explore every part of a Mongolian ger in 3D, answer questions to collect them, then build the ger yourself. · Монгол гэрийн хэсэг бүрийг 3D-ээр судалж, гэрээ өөрөө бариарай.";
+const description = "Explore every part of a Mongolian ger in 3D, answer questions to collect them, then build the ger yourself. · Монгол гэрийн хэсэг бүрийг 3D-ээр үзэж, асуултад хариулан хэсгүүдийг цуглуулж, эцэст нь гэрээ өөрөө бариарай.";
 
 export const metadata: Metadata = {
   // absolute base for the share image; set NEXT_PUBLIC_SITE_URL to the deployed origin

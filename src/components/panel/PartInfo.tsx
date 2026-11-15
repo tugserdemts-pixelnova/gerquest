@@ -1,6 +1,6 @@
 import { useGame } from "../../game/store";
 import { useT } from "../../game/hooks";
-import { closePanel, startQuiz } from "../../game/actions";
+import { closePanel, resetProgress, startQuiz } from "../../game/actions";
 import { enterBuild } from "../../game/build";
 import { D, N } from "../../data/parts";
 
@@ -19,6 +19,7 @@ export default function PartInfo({ hidden }: { hidden: boolean }) {
       </div>
       <button className="btn" id="nx" hidden={pdone || cj - 1 < u} onClick={startQuiz}>{t("next")}</button>
       <button className="btn" id="bld" hidden={!pdone} onClick={enterBuild}>{t("build")}</button>
+      <button className="btn o" id="restart" hidden={!pdone} onClick={resetProgress}>{t("reset")}</button>
       <button className="btn o" id="cl" onClick={closePanel}>{t("close")}</button>
     </div>
   );

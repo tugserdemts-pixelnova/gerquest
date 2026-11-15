@@ -59,7 +59,7 @@ const tex = (k: "dot" | "leaf") => new T.CanvasTexture(cvs2(64, 64, (x, w, h) =>
 
 type World = ReturnType<typeof createWorld>;
 
-export function createSeasons(S: T.Scene, w: World, hemi: T.HemisphereLight, sun: T.DirectionalLight) {
+export function createSeasons(S: T.Scene, w: World, hemi: T.HemisphereLight, sun: T.DirectionalLight, particleScale = 1) {
   const L = w.look, U = L.sky.uniforms, fog = S.fog as T.Fog, cloud = L.clouds;
   // every colour a season drives, in the same order as cols() lists them
   const targets: T.Color[] = [U.hz.value, U.zen.value, U.glow.value, fog.color, hemi.color, hemi.groundColor, sun.color,
@@ -86,7 +86,7 @@ export function createSeasons(S: T.Scene, w: World, hemi: T.HemisphereLight, sun
   const pts = new T.Points(pg, pm); pts.frustumCulled = false; S.add(pts);
   let fx: Fx | null = null;
   const useFx = (f: Fx) => {
-    const [n, cs, size, , , m] = FX[f], c = new T.Color();
+    const [baseN, cs, size, , , m] = FX[f], n = Math.max(1, Math.round(baseN * particleScale)), c = new T.Color();
     for (let i = 0; i < n; i++) { c.set(cs[i % cs.length]); col.set([c.r, c.g, c.b], i * 3); }
     pg.setDrawRange(0, n); (pg.attributes.color as T.BufferAttribute).needsUpdate = true;
     pm.size = size; pm.map = maps[m]; pm.needsUpdate = true; fx = f;
@@ -126,7 +126,7 @@ export function createSeasons(S: T.Scene, w: World, hemi: T.HemisphereLight, sun
       if (k < 1) { k = Math.min(1, (t - t0) / 1800); apply(sm(0, 1, k)); }
       w.forest.tick(to, t);
       if (!fx || pm.opacity <= 0) return;
-      const [n, , , vy, sw] = FX[fx];
+      const [baseN, , , vy, sw] = FX[fx], n = Math.max(1, Math.round(baseN * particleScale));
       for (let i = 0; i < n; i++) {
         const j = i * 3, q = t * .001 + ph[i];
         pos[j] += Math.sin(q * .9) * sw * dt; pos[j + 1] -= vy * spd[i] * dt; pos[j + 2] += Math.cos(q * .7) * sw * .6 * dt;
