@@ -1,6 +1,6 @@
 import { useGame } from "../game/store";
 import { useT, useViewport } from "../game/hooks";
-import { goToStation, resetProgress, toggleInv } from "../game/actions";
+import { goToStation, toggleInv } from "../game/actions";
 import { enterBuild } from "../game/build";
 import { D, N } from "../data/parts";
 import { thumb } from "../three/thumbs";
@@ -21,7 +21,6 @@ export default function Inventory() {
           {u == N && (
             <button id="hb" aria-label={t("buildT")} title={t("buildT") + (built ? " " + "★".repeat(built) : "")} onClick={enterBuild}>🔨</button>
           )}
-          <button id="rs" aria-label={t("reset")} title={t("reset")} onClick={resetProgress}>↺</button>
         </div>
         <Ornament />
         <div className="ig">

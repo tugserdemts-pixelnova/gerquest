@@ -1,15 +1,17 @@
 import { useEffect, useRef, useState } from "react";
+import { resetProgress } from "../game/actions";
 import { setSeason, useGame } from "../game/store";
 import { useT } from "../game/hooks";
 import { SEASONS } from "../data/seasons";
 import LangSwitch from "./LangSwitch";
+import SignOut from "./auth/SignOut";
 
 const ICON = { spring: "🌸", summer: "☀️", autumn: "🍂", winter: "❄️" };
 
 // gear button and its menu. It stays open while you pick, so a new season can be seen taking effect behind it.
 // Pages with no scene to change leave the seasons out
 export default function Settings({ seasons = true }: { seasons?: boolean }) {
-  const { season } = useGame();
+  const { season, u } = useGame();
   const { t } = useT();
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null), gear = useRef<HTMLButtonElement>(null);
@@ -33,6 +35,7 @@ export default function Settings({ seasons = true }: { seasons?: boolean }) {
           <circle cx="12" cy="12" r="6.6" />
         </svg>
       </button>
+      {seasons && u > 0 && <button type="button" id="rs" aria-label={t("reset")} title={t("reset")} onClick={resetProgress}>↺</button>}
       {open && (
         <section aria-label={t("settings")}>
           <h2>{t("settings")}</h2>
@@ -48,6 +51,7 @@ export default function Settings({ seasons = true }: { seasons?: boolean }) {
               ))}
             </div>
           )}
+          {seasons && <SignOut />}
         </section>
       )}
     </div>

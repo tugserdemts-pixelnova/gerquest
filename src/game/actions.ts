@@ -55,7 +55,9 @@ export function collect() {
   }, first ? 560 : 80);
   setTimeout(() => {
     scrollTo({ top: SC(maxJ(getState().u)), behavior: "smooth" });
-    if (j == N) setTimeout(() => { const s = getState(); if (!s.panel && !s.bm.on) openDone(); }, 3200);
+    // The completion card reuses the last station's panel. If the ger has already
+    // been built by the time this delayed callback runs, don't reopen the floor card.
+    if (j == N) setTimeout(() => { const s = getState(); if (!s.built && !s.panel && !s.bm.on) openDone(); }, 3200);
   }, 900);
 }
 

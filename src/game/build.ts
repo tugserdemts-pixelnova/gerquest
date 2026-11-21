@@ -35,9 +35,11 @@ export function enterBuild() {
 export function exitBuild() {
   const { bm, built } = getState();
   if (!bm.on) return;
+  clearTimeout(fbTm);
+  fbTm = 0;
   killDrag();
-  setBm({ on: false });
-  setState({ invAway: false });
+  setBm({ on: false, fb: null });
+  setState({ invAway: false, panel: null, pdone: false });
   setInv(bm.inv);
   // with the ger built the game is over: back to the title and the whole ger, not down at the last station
   if (built) { scrollTo(0, 0); setJc(0); }

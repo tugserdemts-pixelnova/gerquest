@@ -14,7 +14,6 @@ import Inventory from "./components/Inventory";
 import InfoPanel from "./components/panel/InfoPanel";
 import BuildMode from "./components/build/BuildMode";
 import Story from "./components/Story";
-import SignOut from "./components/auth/SignOut";
 
 export default function App() {
   const { lang, u, panel, bm, season } = useGame();
@@ -50,7 +49,6 @@ export default function App() {
       <Spacer />
       <Scene />
       <Settings />
-      <SignOut />
       <Hero />
       <Hint />
       <Labels />

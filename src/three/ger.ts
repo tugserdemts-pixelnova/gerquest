@@ -103,7 +103,7 @@ export type GerGroup = typeof GER_GROUPS[number];
 export interface GerData {
   ex: [T.Object3D, number, number, number][]; // exploded view offsets
   fade: T.Object3D[]; // cloth layers that fade in
-  door: T.Object3D; // hinge of the door leaf: negative rotation.y swings it inward
+  door: T.Object3D; // left-side hinge: negative rotation.y swings the leaf outward
   G: Record<GerGroup, T.Group>;
 }
 
