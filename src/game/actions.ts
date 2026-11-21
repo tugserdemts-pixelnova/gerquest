@@ -34,7 +34,6 @@ function showQ(qi: number) {
   setState({ qi, qo: shuffle(qList(cj)[qi][1].map((_, i) => i)), qa: -1 });
 }
 export function startQuiz() { setState({ panel: "quiz" }); showQ(getState().qi); }
-export function restartQuiz() { showQ(0); }
 export function pick(i: number) { if (getState().qa < 0) setState({ qa: i }); }
 export function nextQ() { const { qi, cj } = getState(); showQ((qi + 1) % qList(cj).length); }
 

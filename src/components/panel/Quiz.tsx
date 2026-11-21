@@ -1,6 +1,6 @@
 import { useGame } from "../../game/store";
 import { useT } from "../../game/hooks";
-import { backToInfo, collect, nextQ, pick, qList, restartQuiz } from "../../game/actions";
+import { backToInfo, collect, nextQ, pick, qList } from "../../game/actions";
 
 // one multiple-choice question; a right answer unlocks "Collect", a wrong one offers the next question
 export default function Quiz({ hidden }: { hidden: boolean }) {
@@ -23,7 +23,6 @@ export default function Quiz({ hidden }: { hidden: boolean }) {
       <button className="btn g" id="nq" hidden={qa < 0 || ok} onClick={nextQ}>{t("nq")}</button>
       <div className="quiz-actions">
         <button className="btn o" id="back" onClick={backToInfo}>{t("back")}</button>
-        <button className="btn o" id="restart-quiz" onClick={restartQuiz}>{t("restartQuiz")}</button>
       </div>
     </div>
   );
