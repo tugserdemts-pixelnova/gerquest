@@ -22,6 +22,7 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 @media(max-width:800px){#pn{left:10px;right:10px;width:auto;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);max-height:50vh;transform:translateY(40px)}#pn.on{transform:none}}
 #pn h2{font-size:clamp(30px,4vw,46px);margin:4px 0 8px;font-weight:900;line-height:1.05}#pn h3{margin:0 0 8px;font-weight:900}#pn p{line-height:1.65;margin:0 0 10px;font-size:16.5px;font-weight:600}
 .quiz-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.quiz-actions .btn{margin-right:0}
+#pq #get,#pq #back{width:min(100%,280px);margin-right:0}
 .no{display:inline-block;background:var(--gold);color:#16295a;border:2px solid var(--edge);border-radius:20px;padding:1px 12px;font-size:13px;font-weight:900;letter-spacing:.06em}
 .bar{height:7px;width:90px;border-radius:4px;margin-bottom:14px}
 .opt{display:block;width:100%;margin-top:9px;border:2.5px solid var(--edge);background:var(--slot);color:var(--ink);padding:12px 14px;border-radius:14px;text-align:left;font:800 15.5px var(--font-nunito),system-ui,sans-serif;cursor:pointer;transition:.15s}
