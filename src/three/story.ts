@@ -198,7 +198,7 @@ export function createStage(ger: T.Object3D, door: T.Object3D) {
         lay = bowlHand.visible = plateHand.visible = false; bowlTable.visible = plate.visible = true;
         W.act = { ...W.act, r: .3, l: .3 };
       }
-      doorA += ((doorOpen ? 1.95 : 0) - doorA) * Math.min(1, dt * 3.2); door.rotation.y = doorA;
+      doorA += ((doorOpen ? -1.95 : 0) - doorA) * Math.min(1, dt * 3.2); door.rotation.y = doorA;
       const g = pup.g;
       g.position.x += (dogT[0] - g.position.x) * Math.min(1, dt * 3); g.position.z += (dogT[1] - g.position.z) * Math.min(1, dt * 3);
       dogA = turn(dogA, dogT[2] - PI / 2, Math.min(1, dt * 3)); g.rotation.y = dogA;

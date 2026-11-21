@@ -4,7 +4,7 @@ import { Batch, doorTex, frameTex, paintM, place } from "../craft";
 const WOOD = 0xa83a14, GOLD = 0xf2c35b, IRON = 0x2c2a2a, OPEN_W = .68, OPEN_H = .88;
 
 // one door for the ger and the station: frame, threshold and painted leaf, with z = 0 at the outer face of the frame.
-// Returns the hinge: rotation.y swings the leaf open, outward
+// Returns the hinge: rotation.y swings the leaf inward when negative.
 export const doorUnit = (Q: T.Object3D) => {
   const postW = .12, depth = .21, zc = -.045;
   const post = (x: number, y: number, w: number, h: number, ft: T.Texture) => {
@@ -36,6 +36,6 @@ export const doorUnit = (Q: T.Object3D) => {
 // хаалга: the door standing in its frame, opened a little so the thickness shows
 export const buildDoor = () => {
   const g = new T.Group(), s = new T.Group(); s.scale.setScalar(2.4); g.add(s);
-  doorUnit(s).rotation.y = .55;
+  doorUnit(s).rotation.y = -.55;
   return g;
 };
